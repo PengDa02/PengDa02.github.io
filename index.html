@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Da Peng - UMM & MLLM Researcher</title>
+    <style>
+        :root {
+            --bg-color: #f4efe6; /* Warm, paper-like background */
+            --text-color: #2c2c2c; /* Dark charcoal text */
+            --accent-color: #8b7355; /* Soft brown accent */
+            --link-color: #5d6d7e; /* Muted blue for links */
+            --font-main: 'Georgia', serif; /* Classic, academic font */
+            --font-mono: 'Courier New', monospace; /* Monospaced for technical feel */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 2px solid var(--accent-color);
+        }
+
+        .header-info h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: normal;
+        }
+
+        .header-info p {
+            margin: 5px 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        .contact {
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .contact a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        .contact a:hover {
+            text-decoration: underline;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        nav a {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9em;
+            color: var(--text-color);
+            text-decoration: none;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a.active, nav a:hover {
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Work Section Styles */
+        .publication {
+            margin-bottom: 30px;
+        }
+
+        .publication h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2em;
+        }
+
+        .publication p {
+            margin: 0;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        /* Daily Section Styles */
+        .daily-group {
+            margin-bottom: 40px;
+        }
+
+        .daily-group-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--accent-color);
+            color: var(--text-color);
+        }
+
+        .daily-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .daily-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .daily-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .daily-item img:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #888;
+            font-family: var(--font-mono);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <!-- Replace with actual path to avatar later -->
+        <img src="../个人主页/头像/photo.jpg" alt="PengDa" class="profile-img" onerror="this.src='https://via.placeholder.com/120'">
+        <div class="header-info">
+            <h1>Da Peng</h1>
+            <p>Master Student, Xi'an Jiaotong University</p>
+            <p>Researcher in UMM & MLLM</p>
+            <div class="contact">
+                ✉️ <a href="mailto:MetaPDa@gmail.com">MetaPDa@gmail.com</a>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <a id="nav-home" class="active" onclick="switchTab('home')">Homepage</a>
+        <a id="nav-work" onclick="switchTab('work')">Work</a>
+        <a id="nav-daily" onclick="switchTab('daily')">Daily</a>
+    </nav>
+
+    <div id="section-home" class="section active">
+        <div class="news-section">
+            <h2 style="font-size: 1.2em; border-bottom: 1px dashed var(--accent-color); padding-bottom: 5px;">News</h2>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li style="margin-bottom: 10px;">🔥 <strong>[2026.03]</strong> CVPR+1 !</li>
+            </ul>
+        </div>
+
+        <div class="experience-section" style="margin-top: 30px;">
+            <h2 style="font-size: 1.2em; border-bottom: 1px dashed var(--accent-color); padding-bottom: 5px;">Experience</h2>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li style="margin-bottom: 10px;">
+                    <strong>2024.09 - Present</strong><br>
+                    <em>THUNLP</em>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>2024.01 - 2024.08</strong><br>
+                    <em>NEC Information Systems (China) Co., Ltd.</em>, Shanghai
+                </li>
+            </ul>
+        </div>
+
+        <div class="about-section" style="margin-top: 30px;">
+            <p><em>More content will be added here soon...</em></p>
+        </div>
+    </div>
+
+    <div id="section-work" class="section">
+        <p><em>所有工作将于近期整理添加</em></p>
+    </div>
+
+    <div id="section-daily" class="section">
+        <div id="daily-gallery">
+            <!-- Example Date Group -->
+            <div class="daily-group">
+                <h3 class="daily-group-title">2026-03-04</h3>
+                <div class="daily-grid">
+                    <div class="daily-item">
+                        <img src="../个人主页/Daily/2026-03-04/1.jpeg" alt="2026-03-04 Image 1">
+                    </div>
+                    <div class="daily-item">
+                        <img src="../个人主页/Daily/2026-03-04/2.jpeg" alt="2026-03-04 Image 2">
+                    </div>
+                    <div class="daily-item">
+                        <img src="../个人主页/Daily/2026-03-04/3.jpeg" alt="2026-03-04 Image 3">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- You can add more groups for other dates here like this:
+            <div class="daily-group">
+                <h3 class="daily-group-title">2026-03-05</h3>
+                <div class="daily-grid">
+                    <div class="daily-item"><img src="..." alt="..."></div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+    
+    <footer>
+        &copy; <span id="year"></span> MetaPDa. All rights reserved.
+    </footer>
+</div>
+
+<script>
+    function switchTab(tabId) {
+        // Update nav links
+        document.getElementById('nav-home').classList.remove('active');
+        document.getElementById('nav-work').classList.remove('active');
+        document.getElementById('nav-daily').classList.remove('active');
+        document.getElementById('nav-' + tabId).classList.add('active');
+
+        // Update sections
+        document.getElementById('section-home').classList.remove('active');
+        document.getElementById('section-work').classList.remove('active');
+        document.getElementById('section-daily').classList.remove('active');
+        document.getElementById('section-' + tabId).classList.add('active');
+    }
+    
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
