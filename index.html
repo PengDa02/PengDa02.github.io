@@ -129,12 +129,12 @@
             font-size: 0.95em;
         }
 
-        /* Daily Section Styles */
-        .daily-group {
+        /* moments Section Styles */
+        .moments-group {
             margin-bottom: 40px;
         }
 
-        .daily-group-title {
+        .moments-group-title {
             font-size: 1.5em;
             margin-bottom: 20px;
             padding-bottom: 10px;
@@ -142,19 +142,19 @@
             color: var(--text-color);
         }
 
-        .daily-grid {
+        .moments-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
 
-        .daily-item {
+        .moments-item {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .daily-item img {
+        .moments-item img {
             width: 100%;
             height: 200px;
             object-fit: cover;
@@ -163,7 +163,7 @@
             transition: transform 0.3s ease;
         }
 
-        .daily-item img:hover {
+        .moments-item img:hover {
             transform: scale(1.02);
         }
         
@@ -183,7 +183,7 @@
 <div class="container">
     <header>
         <!-- Replace with actual path to avatar later -->
-        <img src="../个人主页/头像/photo.jpg" alt="PengDa" class="profile-img" onerror="this.src='https://via.placeholder.com/120'">
+        <img src="Portrait/photo.jpg" alt="PengDa" class="profile-img" onerror="this.src='https://via.placeholder.com/120'">
         <div class="header-info">
             <h1>Da Peng</h1>
             <p>Master Student, Xi'an Jiaotong University</p>
@@ -197,7 +197,7 @@
     <nav>
         <a id="nav-home" class="active" onclick="switchTab('home')">Homepage</a>
         <a id="nav-work" onclick="switchTab('work')">Work</a>
-        <a id="nav-daily" onclick="switchTab('daily')">Daily</a>
+        <a id="nav-moments" onclick="switchTab('moments')">moments</a>
     </nav>
 
     <div id="section-home" class="section active">
@@ -216,8 +216,8 @@
                     <em>THUNLP</em>
                 </li>
                 <li style="margin-bottom: 10px;">
-                    <strong>2024.01 - 2024.08</strong><br>
-                    <em>NEC Information Systems (China) Co., Ltd.</em>, Shanghai
+                    <strong>2023.12</strong><br>
+                    <em>NEC (China) Co., Ltd.</em>, Shanghai
                 </li>
             </ul>
         </div>
@@ -228,32 +228,32 @@
     </div>
 
     <div id="section-work" class="section">
-        <p><em>所有工作将于近期整理添加</em></p>
+        <p><em>All works will be organized and added soon.</em></p>
     </div>
 
-    <div id="section-daily" class="section">
-        <div id="daily-gallery">
+    <div id="section-moments" class="section">
+        <div id="moments-gallery">
             <!-- Example Date Group -->
-            <div class="daily-group">
-                <h3 class="daily-group-title">2026-03-04</h3>
-                <div class="daily-grid">
-                    <div class="daily-item">
-                        <img src="../个人主页/Daily/2026-03-04/1.jpeg" alt="2026-03-04 Image 1">
+            <div class="moments-group">
+                <h3 class="moments-group-title">2026-03-04</h3>
+                <div class="moments-grid">
+                    <div class="moments-item">
+                        <img src="Moments/2026-03-04/1.jpeg" alt="2026-03-04 Image 1">
                     </div>
-                    <div class="daily-item">
-                        <img src="../个人主页/Daily/2026-03-04/2.jpeg" alt="2026-03-04 Image 2">
+                    <div class="moments-item">
+                        <img src="Moments/2026-03-04/2.jpeg" alt="2026-03-04 Image 2">
                     </div>
-                    <div class="daily-item">
-                        <img src="../个人主页/Daily/2026-03-04/3.jpeg" alt="2026-03-04 Image 3">
+                    <div class="moments-item">
+                        <img src="Moments/2026-03-04/3.jpeg" alt="2026-03-04 Image 3">
                     </div>
                 </div>
             </div>
             
             <!-- You can add more groups for other dates here like this:
-            <div class="daily-group">
-                <h3 class="daily-group-title">2026-03-05</h3>
-                <div class="daily-grid">
-                    <div class="daily-item"><img src="..." alt="..."></div>
+            <div class="moments-group">
+                <h3 class="moments-group-title">2026-03-05</h3>
+                <div class="moments-grid">
+                    <div class="moments-item"><img src="..." alt="..."></div>
                 </div>
             </div>
             -->
@@ -270,13 +270,13 @@
         // Update nav links
         document.getElementById('nav-home').classList.remove('active');
         document.getElementById('nav-work').classList.remove('active');
-        document.getElementById('nav-daily').classList.remove('active');
+        document.getElementById('nav-moments').classList.remove('active');
         document.getElementById('nav-' + tabId).classList.add('active');
 
         // Update sections
         document.getElementById('section-home').classList.remove('active');
         document.getElementById('section-work').classList.remove('active');
-        document.getElementById('section-daily').classList.remove('active');
+        document.getElementById('section-moments').classList.remove('active');
         document.getElementById('section-' + tabId).classList.add('active');
     }
     
