@@ -144,8 +144,8 @@
 
         .moments-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
         }
 
         .moments-item {
@@ -156,7 +156,7 @@
 
         .moments-item img {
             width: 100%;
-            height: 200px;
+            height: 100px;
             object-fit: cover;
             border-radius: 4px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -261,6 +261,10 @@
     </div>
     
     <footer>
+        <div style="margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+            <span>Last updated: March 7, 2026</span>
+            <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" style="text-decoration: none; color: var(--link-color); font-size: 1.1em;">🔝 Back to Top</a>
+        </div>
         &copy; <span id="year"></span> MetaPDa. All rights reserved.
     </footer>
 </div>
