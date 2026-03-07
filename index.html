@@ -148,15 +148,18 @@
             gap: 10px;
         }
 
+        .moments-empty {
+            width: 100%;
+            height: 0; /* occupy a cell but visually invisible */
+        }
+
         .moments-date-tag {
-            grid-column: 1 / -1; /* will be overridden by JS after render */
             font-size: 0.85em;
             color: #555;
             font-family: var(--font-mono);
             margin-top: 6px;
             margin-bottom: -6px; /* pull closer to the image below */
             justify-self: start;
-            width: 100px; /* fallback; JS will set to actual column width */
             pointer-events: none;
         }
 
@@ -299,59 +302,89 @@
 
         const PLACEHOLDER_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
-        // Render all images into the grid as a flat sequence.
-        // Requirement: images are packed tightly; days are continuous but may span multiple rows.
-        // Date label is shown only once, right above the first image of that day.
+        // Requirement:
+        // - Images are packed tightly and fill each row as much as possible.
+        // - Images of the same day stay consecutive, but can span multiple rows.
+        // - Date label appears once for each day, directly above that day's first image,
+        //   occupying exactly one grid cell width.
         const momentsData = window.__MOMENTS_DATA__ || [];
 
-        for (const day of momentsData) {
-            if (!day.images || day.images.length === 0) continue;
+        function getColumnCount() {
+            const tpl = window.getComputedStyle(grid).gridTemplateColumns || '';
+            const parts = tpl.split(' ').filter(Boolean);
+            return Math.max(1, parts.length);
+        }
 
-            // Date tag (positioned to the same grid column as the first image via layoutDateTags)
+        function makeEmpty() {
+            const ph = document.createElement('div');
+            ph.className = 'moments-empty';
+            return ph;
+        }
+
+        function makeDateTag(date) {
             const tag = document.createElement('div');
             tag.className = 'moments-date-tag';
-            tag.textContent = day.date;
-            grid.appendChild(tag);
-
-            day.images.forEach((src, idx) => {
-                const item = document.createElement('div');
-                item.className = 'moments-item';
-
-                const img = document.createElement('img');
-                img.className = 'lazy-moment';
-                img.setAttribute('data-src', src);
-                img.src = PLACEHOLDER_SRC;
-                img.alt = `${day.date} Image ${idx + 1}`;
-
-                item.appendChild(img);
-                grid.appendChild(item);
-            });
+            tag.textContent = date;
+            return tag;
         }
 
-        function layoutDateTags() {
-            const tags = grid.querySelectorAll('.moments-date-tag');
-            tags.forEach(tag => {
-                tag.style.gridColumn = '';
-            });
+        function makeImg(date, src, idx) {
+            const wrap = document.createElement('div');
+            wrap.className = 'moments-item';
 
-            tags.forEach(tag => {
-                const nextItem = tag.nextElementSibling;
-                if (!nextItem || !nextItem.classList.contains('moments-item')) return;
+            const img = document.createElement('img');
+            img.className = 'lazy-moment';
+            img.setAttribute('data-src', src);
+            img.src = PLACEHOLDER_SRC;
+            img.alt = `${date} Image ${idx}`;
 
-                const itemStyle = window.getComputedStyle(nextItem);
-                const colStart = itemStyle.gridColumnStart;
+            wrap.appendChild(img);
+            return wrap;
+        }
 
-                // If grid auto-placement hasn't happened yet, fallback to full row.
-                if (!colStart || colStart === 'auto') {
-                    tag.style.gridColumn = '1 / -1';
-                } else {
-                    tag.style.gridColumn = colStart + ' / span 1';
+        function renderPacked() {
+            grid.innerHTML = '';
+
+            const C = getColumnCount();
+            let col = 0;
+
+            for (const day of momentsData) {
+                const imgs = day.images || [];
+                if (imgs.length === 0) continue;
+
+                // If we are at the last column, we cannot place (tag + first image) in the same row,
+                // because the first image must be right after the tag.
+                if (col === C - 1) {
+                    grid.appendChild(makeEmpty());
+                    col = 0;
                 }
-            });
+
+                // Place date tag at current cell
+                grid.appendChild(makeDateTag(day.date));
+                col = (col + 1) % C;
+
+                // Pad the rest of this row so that the first image starts on the next row,
+                // same column as the tag.
+                // Example (C=7): if tag placed at col=5, we add 1 empty to finish the row;
+                // then first image starts at next row col=5.
+                const pad = (C - col) % C;
+                for (let i = 0; i < pad; i++) {
+                    grid.appendChild(makeEmpty());
+                }
+                col = 0;
+
+                // Now place images continuously (they will naturally fill rows)
+                imgs.forEach((src, idx) => {
+                    grid.appendChild(makeImg(day.date, src, idx + 1));
+                    col = (col + 1) % C;
+                });
+            }
         }
+
+        renderPacked();
 
         // Lazy-load images when near viewport
-        const imgs = grid.querySelectorAll('img.lazy-moment[data-src]');
+        const lazyImgs = grid.querySelectorAll('img.lazy-moment[data-src]');
         const observer = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
@@ -368,15 +401,16 @@
             rootMargin: '600px 0px',
             threshold: 0.01
         });
-        imgs.forEach(img => observer.observe(img));
+        lazyImgs.forEach(img => observer.observe(img));
 
-        // Layout tags after the browser has computed grid placement
-        requestAnimationFrame(() => {
-            layoutDateTags();
-            window.addEventListener('resize', () => {
-                clearTimeout(window.__momentsResizeT);
-                window.__momentsResizeT = setTimeout(layoutDateTags, 100);
-            });
+        // Re-pack on resize because column count (C) changes with viewport.
+        window.addEventListener('resize', () => {
+            clearTimeout(window.__momentsPackResizeT);
+            window.__momentsPackResizeT = setTimeout(() => {
+                renderPacked();
+                const imgs2 = grid.querySelectorAll('img.lazy-moment[data-src]');
+                imgs2.forEach(img => observer.observe(img));
+            }, 150);
         });
     }
     
