@@ -148,6 +148,18 @@
             gap: 10px;
         }
 
+        .moments-date-tag {
+            grid-column: 1 / -1; /* will be overridden by JS after render */
+            font-size: 0.85em;
+            color: #555;
+            font-family: var(--font-mono);
+            margin-top: 6px;
+            margin-bottom: -6px; /* pull closer to the image below */
+            justify-self: start;
+            width: 100px; /* fallback; JS will set to actual column width */
+            pointer-events: none;
+        }
+
         .moments-item {
             display: flex;
             flex-direction: column;
@@ -239,237 +251,9 @@
 
     <div id="section-moments" class="section">
         <div id="moments-gallery">
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-03-07</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-03-07/1.jpeg" alt="2026-03-07 Image 1"></div>
-                </div>
+            <div class="moments-grid" id="moments-grid">
+                <!-- populated by JS -->
             </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-03-04</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-03-04/1.jpeg" alt="2026-03-04 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2026-03-04/2.jpeg" alt="2026-03-04 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2026-03-04/3.jpeg" alt="2026-03-04 Image 3"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-03-01</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-03-01/1.jpeg" alt="2026-03-01 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-02-11</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-02-11/1.png" alt="2026-02-11 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-02-05</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-02-05/1.jpeg" alt="2026-02-05 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2026-02-05/2.jpeg" alt="2026-02-05 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2026-02-05/3.jpeg" alt="2026-02-05 Image 3"></div>
-                    <div class="moments-item"> <img src="Moments/2026-02-05/4.jpeg" alt="2026-02-05 Image 4"></div>
-                    <div class="moments-item"> <img src="Moments/2026-02-05/5.jpeg" alt="2026-02-05 Image 5"></div>
-                    <div class="moments-item"> <img src="Moments/2026-02-05/6.jpeg" alt="2026-02-05 Image 6"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-02-03</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-02-03/1.jpeg" alt="2026-02-03 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-02-01</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-02-01/1.jpeg" alt="2026-02-01 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-01-30</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-01-30/1.jpeg" alt="2026-01-30 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-30/2.jpeg" alt="2026-01-30 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-30/3.jpeg" alt="2026-01-30 Image 3"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-30/4.jpeg" alt="2026-01-30 Image 4"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-30/5.jpeg" alt="2026-01-30 Image 5"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-30/6.jpeg" alt="2026-01-30 Image 6"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-01-22</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-01-22/1.jpeg" alt="2026-01-22 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-01-17</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-01-17/1.jpeg" alt="2026-01-17 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-01-14</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-01-14/1.jpeg" alt="2026-01-14 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-01-10</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-01-10/1.jpeg" alt="2026-01-10 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-01-07</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-01-07/1.jpeg" alt="2026-01-07 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-07/2.jpeg" alt="2026-01-07 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-07/3.jpeg" alt="2026-01-07 Image 3"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2026-01-01</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2026-01-01/1.jpeg" alt="2026-01-01 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-01/2.jpeg" alt="2026-01-01 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2026-01-01/3.jpeg" alt="2026-01-01 Image 3"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-31</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-31/1.jpeg" alt="2025-12-31 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-28</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-28/1.jpeg" alt="2025-12-28 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-21</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-21/1.jpeg" alt="2025-12-21 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-16</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-16/1.jpeg" alt="2025-12-16 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-15</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-15/1.jpeg" alt="2025-12-15 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2025-12-15/2.jpeg" alt="2025-12-15 Image 2"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-14</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-14/1.jpeg" alt="2025-12-14 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2025-12-14/2.jpeg" alt="2025-12-14 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2025-12-14/3.jpeg" alt="2025-12-14 Image 3"></div>
-                    <div class="moments-item"> <img src="Moments/2025-12-14/4.jpeg" alt="2025-12-14 Image 4"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-11</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-11/1.jpeg" alt="2025-12-11 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-08</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-08/1.jpeg" alt="2025-12-08 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2025-12-08/2.jpeg" alt="2025-12-08 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2025-12-08/3.jpeg" alt="2025-12-08 Image 3"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-12-01</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-12-01/1.jpeg" alt="2025-12-01 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-11-24</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-11-24/1.jpeg" alt="2025-11-24 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-11-23</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-11-23/1.jpeg" alt="2025-11-23 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2025-11-23/2.jpeg" alt="2025-11-23 Image 2"></div>
-                    <div class="moments-item"> <img src="Moments/2025-11-23/3.jpeg" alt="2025-11-23 Image 3"></div>
-                    <div class="moments-item"> <img src="Moments/2025-11-23/4.jpeg" alt="2025-11-23 Image 4"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-11-22</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-11-22/1.jpeg" alt="2025-11-22 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2025-11-22/2.jpeg" alt="2025-11-22 Image 2"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-11-14</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-11-14/1.jpeg" alt="2025-11-14 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2025-11-14/2.jpeg" alt="2025-11-14 Image 2"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-10-16</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-10-16/1.jpeg" alt="2025-10-16 Image 1"></div>
-                </div>
-            </div>
-
-            <div class="moments-group">
-                <h3 class="moments-group-title">2025-10-15</h3>
-                <div class="moments-grid">
-                    <div class="moments-item"> <img src="Moments/2025-10-15/1.jpeg" alt="2025-10-15 Image 1"></div>
-                    <div class="moments-item"> <img src="Moments/2025-10-15/2.jpeg" alt="2025-10-15 Image 2"></div>
-                </div>
-            </div>
-
         </div>
     </div>
     
@@ -481,6 +265,10 @@
         &copy; <span id="year"></span> MetaPDa. All rights reserved.
     </footer>
 </div>
+
+
+<script src="moments_index.js">
+</script>
 
 <script>
     function switchTab(tabId) {
@@ -495,6 +283,101 @@
         document.getElementById('section-work').classList.remove('active');
         document.getElementById('section-moments').classList.remove('active');
         document.getElementById('section-' + tabId).classList.add('active');
+
+        if (tabId === 'moments') {
+            initMomentsLazyLoad();
+        }
+    }
+
+    function initMomentsLazyLoad() {
+        // Only init once
+        if (window.__momentsLazyInited) return;
+        window.__momentsLazyInited = true;
+
+        const grid = document.getElementById('moments-grid');
+        if (!grid) return;
+
+        const PLACEHOLDER_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+
+        // Render all images into the grid as a flat sequence.
+        // Requirement: images are packed tightly; days are continuous but may span multiple rows.
+        // Date label is shown only once, right above the first image of that day.
+        const momentsData = window.__MOMENTS_DATA__ || [];
+
+        for (const day of momentsData) {
+            if (!day.images || day.images.length === 0) continue;
+
+            // Date tag (positioned to the same grid column as the first image via layoutDateTags)
+            const tag = document.createElement('div');
+            tag.className = 'moments-date-tag';
+            tag.textContent = day.date;
+            grid.appendChild(tag);
+
+            day.images.forEach((src, idx) => {
+                const item = document.createElement('div');
+                item.className = 'moments-item';
+
+                const img = document.createElement('img');
+                img.className = 'lazy-moment';
+                img.setAttribute('data-src', src);
+                img.src = PLACEHOLDER_SRC;
+                img.alt = `${day.date} Image ${idx + 1}`;
+
+                item.appendChild(img);
+                grid.appendChild(item);
+            });
+        }
+
+        function layoutDateTags() {
+            const tags = grid.querySelectorAll('.moments-date-tag');
+            tags.forEach(tag => {
+                tag.style.gridColumn = '';
+            });
+
+            tags.forEach(tag => {
+                const nextItem = tag.nextElementSibling;
+                if (!nextItem || !nextItem.classList.contains('moments-item')) return;
+
+                const itemStyle = window.getComputedStyle(nextItem);
+                const colStart = itemStyle.gridColumnStart;
+
+                // If grid auto-placement hasn't happened yet, fallback to full row.
+                if (!colStart || colStart === 'auto') {
+                    tag.style.gridColumn = '1 / -1';
+                } else {
+                    tag.style.gridColumn = colStart + ' / span 1';
+                }
+            });
+        }
+
+        // Lazy-load images when near viewport
+        const imgs = grid.querySelectorAll('img.lazy-moment[data-src]');
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const img = entry.target;
+                const src = img.getAttribute('data-src');
+                if (src) {
+                    img.src = src;
+                    img.removeAttribute('data-src');
+                }
+                obs.unobserve(img);
+            });
+        }, {
+            root: null,
+            rootMargin: '600px 0px',
+            threshold: 0.01
+        });
+        imgs.forEach(img => observer.observe(img));
+
+        // Layout tags after the browser has computed grid placement
+        requestAnimationFrame(() => {
+            layoutDateTags();
+            window.addEventListener('resize', () => {
+                clearTimeout(window.__momentsResizeT);
+                window.__momentsResizeT = setTimeout(layoutDateTags, 100);
+            });
+        });
     }
     
     document.getElementById('year').textContent = new Date().getFullYear();
