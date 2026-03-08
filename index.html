@@ -144,39 +144,76 @@
 
         .moments-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
+            /* Use a dense, responsive grid. The browser will decide how many columns fit.
+               auto-fit makes columns expand to fill the row; min size controls density. */
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 6px;
+            grid-auto-flow: dense;
         }
 
         .moments-date-tag {
-            grid-column: 1 / -1; /* will be overridden by JS after render */
+            /* Put the date label right above the first image of that day.
+               We place the tag together with the first image inside ONE grid item,
+               so it is truly "directly above" the first image (not in another row). */
             font-size: 0.85em;
             color: #555;
             font-family: var(--font-mono);
-            margin-top: 6px;
-            margin-bottom: -6px; /* pull closer to the image below */
-            justify-self: start;
-            width: 100px; /* fallback; JS will set to actual column width */
+            margin: 0 0 4px 0;
             pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* Wrapper for each tile: a fixed-height label area + a square image.
+           This guarantees all images align on the same baseline, while only
+           the first image of each day shows the date text. */
+        .moments-tile {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .moments-label {
+            height: 18px;           /* reserved space above EVERY image */
+            line-height: 18px;
+            font-size: 0.85em;
+            color: #555;
+            font-family: var(--font-mono);
+            pointer-events: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 0 4px 0;
+        }
+
+        .moments-label.is-empty {
+            /* keep the space, but show nothing */
+            visibility: hidden;
         }
 
         .moments-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: block;
         }
 
         .moments-item img {
             width: 100%;
-            height: 100px;
+            aspect-ratio: 1 / 1; /* square tiles; keeps layout tight */
+            height: auto;
             object-fit: cover;
             border-radius: 4px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.10);
+            transition: transform 0.2s ease;
+            display: block;
         }
 
         .moments-item img:hover {
             transform: scale(1.02);
+        }
+
+        /* Backward-compat: keep .moments-first defined, but no longer used */
+        .moments-first {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
         }
         
         /* Footer */
@@ -300,20 +337,29 @@
         const PLACEHOLDER_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
         // Render all images into the grid as a flat sequence.
-        // Requirement: images are packed tightly; days are continuous but may span multiple rows.
-        // Date label is shown only once, right above the first image of that day.
+        // Requirement:
+        // - images are packed tightly; responsive column count
+        // - reserve the SAME label space above EVERY image
+        // - only the FIRST image of each day shows the date text
         const momentsData = window.__MOMENTS_DATA__ || [];
 
         for (const day of momentsData) {
             if (!day.images || day.images.length === 0) continue;
 
-            // Date tag (positioned to the same grid column as the first image via layoutDateTags)
-            const tag = document.createElement('div');
-            tag.className = 'moments-date-tag';
-            tag.textContent = day.date;
-            grid.appendChild(tag);
-
             day.images.forEach((src, idx) => {
+                // Each image becomes one tile: [label placeholder] + [square image]
+                const tile = document.createElement('div');
+                tile.className = 'moments-tile';
+
+                const label = document.createElement('div');
+                label.className = 'moments-label';
+                if (idx === 0) {
+                    label.textContent = day.date;
+                } else {
+                    label.textContent = day.date; // keep for accessibility/select but hidden
+                    label.classList.add('is-empty');
+                }
+
                 const item = document.createElement('div');
                 item.className = 'moments-item';
 
@@ -324,29 +370,9 @@
                 img.alt = `${day.date} Image ${idx + 1}`;
 
                 item.appendChild(img);
-                grid.appendChild(item);
-            });
-        }
-
-        function layoutDateTags() {
-            const tags = grid.querySelectorAll('.moments-date-tag');
-            tags.forEach(tag => {
-                tag.style.gridColumn = '';
-            });
-
-            tags.forEach(tag => {
-                const nextItem = tag.nextElementSibling;
-                if (!nextItem || !nextItem.classList.contains('moments-item')) return;
-
-                const itemStyle = window.getComputedStyle(nextItem);
-                const colStart = itemStyle.gridColumnStart;
-
-                // If grid auto-placement hasn't happened yet, fallback to full row.
-                if (!colStart || colStart === 'auto') {
-                    tag.style.gridColumn = '1 / -1';
-                } else {
-                    tag.style.gridColumn = colStart + ' / span 1';
-                }
+                tile.appendChild(label);
+                tile.appendChild(item);
+                grid.appendChild(tile);
             });
         }
 
@@ -369,15 +395,6 @@
             threshold: 0.01
         });
         imgs.forEach(img => observer.observe(img));
-
-        // Layout tags after the browser has computed grid placement
-        requestAnimationFrame(() => {
-            layoutDateTags();
-            window.addEventListener('resize', () => {
-                clearTimeout(window.__momentsResizeT);
-                window.__momentsResizeT = setTimeout(layoutDateTags, 100);
-            });
-        });
     }
     
     document.getElementById('year').textContent = new Date().getFullYear();
