@@ -115,18 +115,52 @@
 
         /* Work Section Styles */
         .publication {
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         .publication h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.2em;
+            margin: 0 0 6px 0;
+            font-size: 1.15em;
+            font-weight: bold;
+            line-height: 1.4;
         }
 
-        .publication p {
-            margin: 0;
-            color: #666;
+        .publication .authors {
+            margin: 0 0 6px 0;
+            font-size: 0.98em;
+            color: var(--text-color);
+        }
+
+        .publication .authors .me {
+            text-decoration: underline;
+        }
+
+        .publication .tldr {
+            margin: 0 0 6px 0;
+            font-style: italic;
+            color: #c0392b; /* red highlight for the one-line summary */
             font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .publication .venue {
+            margin: 0;
+            font-size: 0.95em;
+            color: var(--text-color);
+        }
+
+        .publication .venue em {
+            font-style: italic;
+            margin-right: 8px;
+        }
+
+        .publication .venue a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        .publication .venue a:hover {
+            text-decoration: underline;
         }
 
         /* moments Section Styles */
@@ -272,7 +306,7 @@
                     <em>THUNLP</em>
                 </li>
                 <li style="margin-bottom: 10px;">
-                    <strong>2023.12</strong><br>
+                    <strong>2023.12 - 2024.02</strong><br>
                     <em>NEC (China) Co., Ltd.</em>, Shanghai
                 </li>
             </ul>
@@ -284,7 +318,47 @@
     </div>
 
     <div id="section-work" class="section">
-        <p><em>All works will be organized and added soon.</em></p>
+        <p style="margin: 0 0 28px 0; color: #555; font-size: 0.95em;">
+            <span style="color: #c0392b;">*</span> Equal Contribution &nbsp;|&nbsp;
+            <em style="color: #666;">All works will be organized and added soon.</em>
+        </p>
+        <div class="publication">
+            <h3>🔥 Cheers: Decoupling Patch Details from Semantic Representations Enables Unified Multimodal Comprehension and Generation</h3>
+            <p class="authors">
+                Yichen Zhang*, <span class="me">Da Peng</span>*, Zonghao Guo, Zijian Zhang, Xuesong Yang, Tong Sun, Shichu Sun, Yidan Zhang, Yanghao Li, Haiyan Zhao, Wang Xu, Qi Shi, Yangang Sun, Chi Chen, Shuo Wang, Yukun Yan, Xu Han, Qiang Ma, Wei Ke, Liang Wang, Zhiyuan Liu, Maosong Sun.
+            </p>
+            <p class="tldr">A unified multimodal model that decouples patch-level details from semantic representations, stabilizing semantics for understanding and improving fidelity for image generation via gated detail residuals — matching/surpassing strong UMMs with only 20% of the training cost.</p>
+            <p class="venue">
+                <em>Preprint</em>
+                [<a href="https://arxiv.org/pdf/2603.12793" target="_blank">Paper</a>]
+                [<a href="https://huggingface.co/ai9stars/Cheers" target="_blank">HuggingFace</a>]
+                [<a href="https://github.com/AI9Stars/Cheers" target="_blank">Code</a>]
+            </p>
+        </div>
+
+        <div class="publication">
+            <h3>🔥 FlexiVideo: Variation-Aware Temporal Dynamics Modeling for Efficient Video Understanding</h3>
+            <p class="authors">
+                <span class="me">Da Peng</span>*, Xuesong Yang*, Zonghao Guo, Yichen Zhang, Chi Chen, Yidan Zhang, Yuan Yao, Fang Wan, Wei Ke, Maosong Sun.
+            </p>
+            <p class="tldr">A variation-aware temporal dynamics modeling framework for efficient video understanding — adaptively allocating compute to informative temporal segments to improve both efficiency and accuracy.</p>
+            <p class="venue">
+                <em>CVPR 2026</em>
+            </p>
+        </div>
+
+        <div class="publication">
+            <h3>🔥 Will Pre-Training Ever End? A First Step Toward Next-Generation Foundation MLLMs via Self-Improving Systematic Cognition</h3>
+            <p class="authors">
+                Xiaoying Zhang, <span class="me">Da Peng</span>, Yipeng Zhang, Zonghao Guo, Chengyue Wu, Jen-Tse Huang, Chi Chen, Wei Ke, Helen Meng, Maosong Sun.
+            </p>
+            <p class="tldr">SICOG, a self-learning framework that uses Chain-of-Description perception and Chain-of-Thought reasoning to let MLLMs curate their own pre-training data, achieving a complete self-improving paradigm for next-generation foundation MLLMs.</p>
+            <p class="venue">
+                <em>Preprint</em>
+                [<a href="https://arxiv.org/pdf/2503.12303" target="_blank">Paper</a>]
+                [<a href="https://github.com/thunlp/SICOG" target="_blank">Code</a>]
+            </p>
+        </div>
     </div>
 
     <div id="section-moments" class="section">
