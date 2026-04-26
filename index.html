@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Da Peng - UMM & MLLM Researcher</title>
+    <title>Da Peng</title>
     <style>
         :root {
             --bg-color: #f4efe6; /* Warm, paper-like background */
@@ -172,7 +172,7 @@
             display: grid;
             /* Use a dense, responsive grid. The browser will decide how many columns fit.
                auto-fit makes columns expand to fill the row; min size controls density. */
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
             gap: 6px;
             grid-auto-flow: dense;
         }
@@ -242,6 +242,73 @@
             align-items: stretch;
         }
         
+        /* Experience Timeline */
+        .timeline {
+            list-style: none;
+            padding-left: 0;
+            position: relative;
+            margin-left: 12px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: var(--accent-color);
+        }
+
+        .timeline li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 16px;
+        }
+
+        .timeline li:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline li::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 7px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .timeline .exp-time {
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            color: #888;
+            line-height: 1.3;
+        }
+
+        .timeline .exp-org {
+            font-weight: bold;
+            font-size: 1.05em;
+            line-height: 1.3;
+        }
+
+        .timeline .exp-role {
+            font-style: italic;
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.3;
+        }
+
+        .timeline .exp-desc {
+            font-size: 0.93em;
+            color: #666;
+            margin: 0;
+            line-height: 1.3;
+        }
+
         /* Footer */
         footer {
             margin-top: 60px;
@@ -262,7 +329,7 @@
         <div class="header-info">
             <h1>Da Peng</h1>
             <p style="margin-bottom: 2px;">Master Student, Xi'an Jiaotong University</p>
-            <p style="margin-top: 0;">Researcher in UMM & MLLM & Multimodal</p>
+            <p style="margin-top: 0;">Researcher in LVLMs & UMMs</p>
             <div class="contact">
                 ✉️ <a href="mailto:MetaPDa@gmail.com">MetaPDa@gmail.com</a> | 📍 Currently in Beijing
             </div>
@@ -285,6 +352,7 @@
         <div class="news-section">
             <h2 style="font-size: 1.2em; border-bottom: 1px dashed var(--accent-color); padding-bottom: 5px;">News</h2>
             <ul style="list-style-type: none; padding-left: 0;">
+                <li style="margin-bottom: 10px;">🚀 <strong>[2026.05]</strong> Joined Tongyi as Research Intern .</li>
                 <li style="margin-bottom: 10px;">🍺 <strong>[2026.03]</strong> Cheers for Open Source ! </li>
                 <li style="margin-bottom: 10px;">🔥 <strong>[2026.03]</strong> CVPR+1 ! See you in Denver ! </li>
             </ul>
@@ -292,14 +360,23 @@
 
         <div class="experience-section" style="margin-top: 30px;">
             <h2 style="font-size: 1.2em; border-bottom: 1px dashed var(--accent-color); padding-bottom: 5px;">Experience</h2>
-            <ul style="list-style-type: none; padding-left: 0;">
-                <li style="margin-bottom: 10px;">
-                    <strong>2024.09 - Present</strong><br>
-                    <em>THUNLP</em>
+            <ul class="timeline">
+                <li>
+                    <div class="exp-time">2026.05 - Present</div>
+                    <div class="exp-org">Tongyi (Qwen)</div>
+                    <div class="exp-role">Research Intern</div>
+                    <p class="exp-desc">World perception enhancement for multimodal large models.</p>
                 </li>
-                <li style="margin-bottom: 10px;">
-                    <strong>2023.12 - 2024.02</strong><br>
-                    <em>NEC (China) Co., Ltd.</em>, Shanghai
+                <li>
+                    <div class="exp-time">2024.09 - 2026.04</div>
+                    <div class="exp-org">THUNLP</div>
+                    <div class="exp-role">Research Intern</div>
+                    <p class="exp-desc">Unified multimodal models and efficient video understanding.</p>
+                </li>
+                <li>
+                    <div class="exp-time">2023.12 - 2024.02</div>
+                    <div class="exp-org">NEC (China) Co., Ltd.</div>
+                    <div class="exp-role">Intern, Shanghai</div>
                 </li>
             </ul>
         </div>
@@ -360,7 +437,7 @@
     
     <footer>
         <div style="margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-            <span>Last updated: March 16, 2026</span>
+            <span>Last updated: April 26, 2026</span>
             <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" style="text-decoration: none; color: var(--link-color); font-size: 1.1em;">🔝 Back to Top</a>
         </div>
         &copy; <span id="year"></span> MetaPDa. All rights reserved.
