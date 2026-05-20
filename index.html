@@ -337,12 +337,12 @@
     </header>
 
     <nav>
-        <a id="nav-home" class="active" onclick="switchTab('home')">Homepage</a>
-        <a id="nav-work" onclick="switchTab('work')">Work</a>
-        <a id="nav-moments" onclick="switchTab('moments')">moments</a>
+        <a id="nav-moments" class="active" onclick="switchTab('moments')">MOMENTS</a>
+        <a id="nav-work" onclick="switchTab('work')">WORK</a>
+        <a id="nav-home" onclick="switchTab('home')">ABOUT ME</a>
     </nav>
 
-    <div id="section-home" class="section active">
+    <div id="section-home" class="section">
         <div class="about-me" style="margin-bottom: 30px; font-size: 1.05em; color: var(--text-color);">
             <p>I am Da Peng, a PhD student at Xi'an Jiaotong University, advised by <a href="https://gr.xjtu.edu.cn/en/web/wei.ke/homepage" target="_blank" style="color: var(--link-color); text-decoration: none;">Wei Ke</a>. My research primarily focuses on <strong>UMMs</strong> and <strong>MLLMs</strong>. I am broadly interested in Artificial Intelligence and Machine Learning. I believe that bridging the gap between vision, language, and other modalities is crucial for the next generation of general-purpose AI. My long-term goal is to explore simple, scalable, and effective architectures for multimodal intelligence.</p>
             
@@ -427,7 +427,7 @@
         </div>
     </div>
 
-    <div id="section-moments" class="section">
+    <div id="section-moments" class="section active">
         <div id="moments-gallery">
             <div class="moments-grid" id="moments-grid">
                 <!-- populated by JS -->
@@ -539,6 +539,7 @@
     }
     
     document.getElementById('year').textContent = new Date().getFullYear();
+    initMomentsLazyLoad();
 </script>
 
 </body>
