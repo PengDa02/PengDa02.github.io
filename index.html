@@ -229,10 +229,37 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.10);
             transition: transform 0.2s ease;
             display: block;
+            cursor: zoom-in;
         }
 
         .moments-item img:hover {
             transform: scale(1.02);
+        }
+
+        .moments-lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.88);
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            box-sizing: border-box;
+            cursor: zoom-out;
+        }
+
+        .moments-lightbox.open {
+            display: flex;
+        }
+
+        .moments-lightbox img {
+            max-width: min(95vw, 1400px);
+            max-height: 92vh;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            cursor: default;
         }
 
         /* Backward-compat: keep .moments-first defined, but no longer used */
@@ -436,6 +463,10 @@
             </div>
         </div>
     </div>
+
+    <div id="moments-lightbox" class="moments-lightbox" aria-hidden="true">
+        <img alt="">
+    </div>
     
     <footer>
         <div style="margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
@@ -451,6 +482,43 @@
 </script>
 
 <script>
+    function toThumbSrc(src) {
+        const dot = src.lastIndexOf('.');
+        if (dot === -1) return src + '.thumb.webp';
+        return src.slice(0, dot) + '.thumb.webp';
+    }
+
+    function ensureLightbox() {
+        const lb = document.getElementById('moments-lightbox');
+        if (!lb || lb.dataset.bound) return;
+        lb.dataset.bound = '1';
+
+        lb.addEventListener('click', () => {
+            lb.classList.remove('open');
+            lb.setAttribute('aria-hidden', 'true');
+            lb.querySelector('img').removeAttribute('src');
+        });
+
+        lb.querySelector('img').addEventListener('click', (e) => e.stopPropagation());
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lb.classList.contains('open')) {
+                lb.classList.remove('open');
+                lb.setAttribute('aria-hidden', 'true');
+                lb.querySelector('img').removeAttribute('src');
+            }
+        });
+    }
+
+    function openMomentLightbox(fullSrc) {
+        ensureLightbox();
+        const lb = document.getElementById('moments-lightbox');
+        const img = lb.querySelector('img');
+        img.src = fullSrc;
+        lb.classList.add('open');
+        lb.setAttribute('aria-hidden', 'false');
+    }
+
     function switchTab(tabId) {
         // Update nav links
         document.getElementById('nav-home').classList.remove('active');
@@ -508,9 +576,18 @@
 
                 const img = document.createElement('img');
                 img.className = 'lazy-moment';
-                img.setAttribute('data-src', src);
+                img.setAttribute('data-src', toThumbSrc(src));
+                img.setAttribute('data-full-src', src);
                 img.src = PLACEHOLDER_SRC;
                 img.alt = `${day.date} Image ${idx + 1}`;
+                img.addEventListener('click', () => openMomentLightbox(src));
+                img.addEventListener('error', function onThumbError() {
+                    const fullSrc = img.getAttribute('data-full-src');
+                    if (fullSrc && !img.src.endsWith(fullSrc)) {
+                        img.src = fullSrc;
+                        img.removeEventListener('error', onThumbError);
+                    }
+                });
 
                 item.appendChild(img);
                 tile.appendChild(label);
