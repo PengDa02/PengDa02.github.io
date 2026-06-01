@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 try:
-    from PIL import Image
+    from PIL import Image, ImageOps
 except ImportError:
     print("Missing dependency. Install with: pip install Pillow", file=sys.stderr)
     sys.exit(1)
@@ -58,6 +58,7 @@ def save_webp(image: Image.Image, dest: Path, quality: int) -> None:
 def generate_thumb(original: Path, thumb: Path, size: int, quality: int) -> None:
     with Image.open(original) as im:
         im.load()
+        im = ImageOps.exif_transpose(im)
         resized = im.copy()
         resized.thumbnail((size, size), Image.Resampling.LANCZOS)
         save_webp(resized, thumb, quality)
