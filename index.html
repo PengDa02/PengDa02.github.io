@@ -168,6 +168,16 @@
             color: var(--text-color);
         }
 
+        .moments-intro {
+            margin: 0 0 32px 0;
+            padding: 0 0 0 18px;
+            border-left: 3px solid var(--accent-color);
+            font-size: 0.98em;
+            font-style: italic;
+            line-height: 1.75;
+            color: #555;
+        }
+
         .moments-grid {
             display: grid;
             /* Use a dense, responsive grid. The browser will decide how many columns fit.
@@ -459,6 +469,7 @@
 
     <div id="section-moments" class="section">
         <div id="moments-gallery">
+            <p class="moments-intro">You'll find many photos of wine here. For me, wine is not an escape from reality but a way of engaging with life. It captures journeys, friendships, conversations, and moments worth remembering, while reminding me to slow down and stay curious about the world.</p>
             <div class="moments-grid" id="moments-grid">
                 <!-- populated by JS -->
             </div>
