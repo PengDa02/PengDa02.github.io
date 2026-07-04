@@ -8,10 +8,25 @@
         :root {
             --bg-color: #f4efe6; /* Warm, paper-like background */
             --text-color: #2c2c2c; /* Dark charcoal text */
+            --muted-color: #555; /* Secondary / muted text */
+            --faint-color: #888; /* Faint text (footer, timestamps) */
             --accent-color: #8b7355; /* Soft brown accent */
             --link-color: #5d6d7e; /* Muted blue for links */
+            --card-bg: #ece5d8; /* Slightly darker surface than bg */
+            --shadow-color: rgba(0, 0, 0, 0.10);
             --font-main: 'Georgia', serif; /* Classic, academic font */
             --font-mono: 'Courier New', monospace; /* Monospaced for technical feel */
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1b1a18;
+            --text-color: #e6e1d8;
+            --muted-color: #b0a99c;
+            --faint-color: #8c8578;
+            --accent-color: #b89a6f;
+            --link-color: #9db4c9;
+            --card-bg: #262421;
+            --shadow-color: rgba(0, 0, 0, 0.45);
         }
 
         body {
@@ -23,6 +38,33 @@
             line-height: 1.6;
             display: flex;
             justify-content: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 900;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1.1em;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px var(--shadow-color);
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.08);
         }
 
         .container {
@@ -58,7 +100,7 @@
         .header-info p {
             margin: 5px 0;
             font-style: italic;
-            color: #555;
+            color: var(--muted-color);
         }
 
         .contact {
@@ -83,20 +125,23 @@
             justify-content: center;
         }
 
-        nav a {
+        nav button {
+            font-family: var(--font-main);
             text-transform: uppercase;
             letter-spacing: 2px;
             font-size: 0.9em;
             color: var(--text-color);
-            text-decoration: none;
-            padding-bottom: 5px;
+            background: none;
+            border: none;
+            padding: 0 0 5px 0;
             border-bottom: 2px solid transparent;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, color 0.3s ease;
             cursor: pointer;
         }
 
-        nav a.active, nav a:hover {
+        nav button.active, nav button:hover, nav button:focus-visible {
             border-bottom: 2px solid var(--accent-color);
+            outline: none;
         }
 
         .section {
@@ -175,7 +220,68 @@
             font-size: 0.98em;
             font-style: italic;
             line-height: 1.75;
-            color: #555;
+            color: var(--muted-color);
+        }
+
+        /* Month scroller above the photos */
+        .moments-months {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .moments-months-track {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 6px 50%;               /* lets the first/last chip reach center */
+            scrollbar-width: none;          /* Firefox */
+            -ms-overflow-style: none;       /* IE/Edge */
+            cursor: grab;
+            /* Fade out on both edges */
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+        }
+
+        .moments-months-track::-webkit-scrollbar {
+            display: none;                  /* Chrome/Safari */
+        }
+
+        .moments-months-track.dragging {
+            cursor: grabbing;
+            scroll-behavior: auto;
+        }
+
+        .month-chip {
+            scroll-snap-align: center;
+            flex: 0 0 auto;
+            padding: 6px 15px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted-color);
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            white-space: nowrap;
+            cursor: pointer;
+            opacity: 0.55;
+            transition: opacity 0.2s ease, color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            user-select: none;
+        }
+
+        .month-chip:hover {
+            opacity: 0.85;
+        }
+
+        .month-chip.active {
+            opacity: 1;
+            color: var(--text-color);
+            background: var(--card-bg);
+            border-color: var(--accent-color);
+            font-weight: bold;
+            transform: scale(1.05);
         }
 
         .moments-grid {
@@ -192,7 +298,7 @@
                We place the tag together with the first image inside ONE grid item,
                so it is truly "directly above" the first image (not in another row). */
             font-size: 0.85em;
-            color: #555;
+            color: var(--muted-color);
             font-family: var(--font-mono);
             margin: 0 0 4px 0;
             pointer-events: none;
@@ -212,7 +318,7 @@
             height: 18px;           /* reserved space above EVERY image */
             line-height: 18px;
             font-size: 0.85em;
-            color: #555;
+            color: var(--muted-color);
             font-family: var(--font-mono);
             pointer-events: none;
             white-space: nowrap;
@@ -236,7 +342,7 @@
             height: auto;
             object-fit: cover;
             border-radius: 4px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.10);
+            box-shadow: 0 3px 6px var(--shadow-color);
             transition: transform 0.2s ease;
             display: block;
             cursor: zoom-in;
@@ -263,22 +369,104 @@
             display: flex;
         }
 
+        .lb-figure {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            max-width: min(95vw, 1400px);
+            cursor: default;
+        }
+
         .moments-lightbox img {
             max-width: min(95vw, 1400px);
-            max-height: 92vh;
+            max-height: 86vh;
             object-fit: contain;
             border-radius: 6px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
             cursor: default;
         }
 
-        /* Backward-compat: keep .moments-first defined, but no longer used */
-        .moments-first {
+        .lb-caption {
             display: flex;
-            flex-direction: column;
-            align-items: stretch;
+            align-items: center;
+            gap: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            cursor: default;
         }
-        
+
+        .lb-counter {
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .lb-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 2em;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .lb-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        .lb-btn:disabled {
+            opacity: 0.25;
+            cursor: default;
+        }
+
+        .lb-prev { left: 16px; }
+        .lb-next { right: 16px; }
+
+        .lb-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 1.6em;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .lb-close:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+
+        @media (max-width: 600px) {
+            .lb-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.6em;
+            }
+            .lb-prev { left: 6px; }
+            .lb-next { right: 6px; }
+        }
+
         /* Experience Timeline */
         .timeline {
             list-style: none;
@@ -322,7 +510,7 @@
         .timeline .exp-time {
             font-family: var(--font-mono);
             font-size: 0.88em;
-            color: #888;
+            color: var(--faint-color);
             line-height: 1.3;
         }
 
@@ -335,13 +523,13 @@
         .timeline .exp-role {
             font-style: italic;
             font-size: 0.95em;
-            color: #555;
+            color: var(--muted-color);
             line-height: 1.3;
         }
 
         .timeline .exp-desc {
             font-size: 0.93em;
-            color: #666;
+            color: var(--muted-color);
             margin: 0;
             line-height: 1.3;
         }
@@ -351,18 +539,152 @@
             margin-top: 60px;
             text-align: center;
             font-size: 0.8em;
-            color: #888;
+            color: var(--faint-color);
             font-family: var(--font-mono);
+        }
+
+        .footer-top {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-top a {
+            text-decoration: none;
+            color: var(--link-color);
+            font-size: 1.1em;
+        }
+
+        /* Social links in header */
+        .social-links {
+            margin-top: 12px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .social-links a {
+            color: var(--muted-color);
+            display: inline-flex;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .social-links svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Shared section titles (News / Experience / etc.) */
+        .section-title {
+            font-size: 1.2em;
+            border-bottom: 1px dashed var(--accent-color);
+            padding-bottom: 5px;
+        }
+
+        .about-me {
+            margin-bottom: 30px;
+            font-size: 1.05em;
+            color: var(--text-color);
+        }
+
+        .about-me a,
+        .about-me a:visited {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        .about-me a:hover {
+            text-decoration: underline;
+        }
+
+        .news-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .news-list li {
+            margin-bottom: 10px;
+        }
+
+        .experience-section,
+        .about-section {
+            margin-top: 30px;
+        }
+
+        .work-note {
+            margin: 0 0 28px 0;
+            color: var(--muted-color);
+            font-size: 0.95em;
+        }
+
+        .work-note .star {
+            color: #c0392b;
+        }
+
+        .work-note em {
+            color: var(--muted-color);
+        }
+
+        /* Responsive: tablets and phones */
+        @media (max-width: 600px) {
+            .container {
+                width: 92%;
+                margin: 24px auto;
+                padding: 12px;
+            }
+
+            header {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+            .profile-img {
+                margin: 0 0 16px 0;
+            }
+
+            .header-info h1 {
+                font-size: 1.9em;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            nav {
+                gap: 18px;
+                flex-wrap: wrap;
+            }
+
+            .theme-toggle {
+                top: 12px;
+                right: 12px;
+                width: 38px;
+                height: 38px;
+            }
+
+            .moments-grid {
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            }
         }
 
     </style>
 </head>
 <body>
 
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+
 <div class="container">
     <header>
-        <!-- Replace with actual path to avatar later -->
-        <img src="Portrait/photo.jpg" alt="PengDa" class="profile-img" onerror="this.src='https://via.placeholder.com/120'">
+        <img src="Portrait/photo.jpg" alt="Da Peng" class="profile-img" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22%23cabfa8%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2255%25%22%20font-size%3D%2248%22%20fill%3D%22%23fff%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%3EDP%3C%2Ftext%3E%3C%2Fsvg%3E'">
         <div class="header-info">
             <h1>Da Peng</h1>
             <p style="margin-bottom: 2px;">PhD Student, Xi'an Jiaotong University</p>
@@ -374,32 +696,32 @@
     </header>
 
     <nav>
-        <a id="nav-home" class="active" onclick="switchTab('home')">ABOUT ME</a>
-        <a id="nav-work" onclick="switchTab('work')">WORK</a>
-        <a id="nav-moments" onclick="switchTab('moments')">MOMENTS</a>
+        <button id="nav-home" type="button" class="active" onclick="switchTab('home')">ABOUT ME</button>
+        <button id="nav-work" type="button" onclick="switchTab('work')">WORK</button>
+        <button id="nav-moments" type="button" onclick="switchTab('moments')">MOMENTS</button>
     </nav>
 
     <div id="section-home" class="section active">
-        <div class="about-me" style="margin-bottom: 30px; font-size: 1.05em; color: var(--text-color);">
-            <p>Hi, I'm Da Peng, a Ph.D. student at Xi'an Jiaotong University, advised by <a href="https://gr.xjtu.edu.cn/en/web/wei.ke/homepage" target="_blank" style="color: var(--link-color); text-decoration: none;">Prof. Wei Ke</a>. My research focuses on unified multimodal models and large vision language models. More broadly, I am interested in artificial intelligence and machine learning, particularly in enabling models to better connect and reason across vision, language, and other modalities. Currently, my research is focused on physical perception in real-world environments, where I explore simple yet effective approaches for improving model understanding and reasoning.</p>
+        <div class="about-me">
+            <p>Hi, I'm Da Peng, a Ph.D. student at Xi'an Jiaotong University, advised by <a href="https://gr.xjtu.edu.cn/en/web/wei.ke/homepage" target="_blank" rel="noopener">Prof. Wei Ke</a>. My research focuses on unified multimodal models and large vision language models. More broadly, I am interested in artificial intelligence and machine learning, particularly in enabling models to better connect and reason across vision, language, and other modalities. Currently, my research is focused on physical perception in real-world environments, where I explore simple yet effective approaches for improving model understanding and reasoning.</p>
 
-            <p>I have been fortunate to collaborate with many talented researchers, including <a href="https://scholar.google.com/citations?user=h1I6LJcAAAAJ&hl=zh-CN" target="_blank" style="color: var(--link-color); text-decoration: none;">Zonghao Guo</a>, Yansong Li, Shichu Sun, <a href="https://comedy0913.github.io/" target="_blank" style="color: var(--link-color); text-decoration: none;">Jiale Wang</a>, Xuesong Yang, and <a href="https://scholar.google.com/citations?user=Jck7vrwAAAAJ&hl=zh-CN" target="_blank" style="color: var(--link-color); text-decoration: none;">Yichen Zhang</a>. This list will continue to grow over time.</p>
+            <p>I have been fortunate to collaborate with many talented researchers, including <a href="https://scholar.google.com/citations?user=h1I6LJcAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Zonghao Guo</a>, Yansong Li, Shichu Sun, <a href="https://comedy0913.github.io/" target="_blank" rel="noopener">Jiale Wang</a>, Xuesong Yang, and <a href="https://scholar.google.com/citations?user=Jck7vrwAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Yichen Zhang</a>. This list will continue to grow over time.</p>
 
             <p>Feel free to reach out if you are interested in discussing research ideas or potential collaborations.</p>
         </div>
 
         <div class="news-section">
-            <h2 style="font-size: 1.2em; border-bottom: 1px dashed var(--accent-color); padding-bottom: 5px;">News</h2>
-            <ul style="list-style-type: none; padding-left: 0;">
-                <li style="margin-bottom: 10px;">🔥 <strong>[2026.06]</strong> ECCV+1 ! </li>
-                <li style="margin-bottom: 10px;">🚀 <strong>[2026.05]</strong> Joined Tongyi as Research Intern .</li>
-                <li style="margin-bottom: 10px;">🍺 <strong>[2026.03]</strong> Cheers for Open Source ! </li>
-                <li style="margin-bottom: 10px;">🔥 <strong>[2026.03]</strong> CVPR+1 ! See you in Denver ! </li>
+            <h2 class="section-title">News</h2>
+            <ul class="news-list">
+                <li>🔥 <strong>[2026.06]</strong> ECCV+1 ! </li>
+                <li>🚀 <strong>[2026.05]</strong> Joined Tongyi as Research Intern .</li>
+                <li>🍺 <strong>[2026.03]</strong> Cheers for Open Source ! </li>
+                <li>🔥 <strong>[2026.03]</strong> CVPR+1 ! See you in Denver ! </li>
             </ul>
         </div>
 
-        <div class="experience-section" style="margin-top: 30px;">
-            <h2 style="font-size: 1.2em; border-bottom: 1px dashed var(--accent-color); padding-bottom: 5px;">Experience</h2>
+        <div class="experience-section">
+            <h2 class="section-title">Experience</h2>
             <ul class="timeline">
                 <li>
                     <div class="exp-time">2026.05 - Present</div>
@@ -419,15 +741,15 @@
             </ul>
         </div>
 
-        <div class="about-section" style="margin-top: 30px;">
+        <div class="about-section">
             <p><em>More content will be added here soon...</em></p>
         </div>
     </div>
 
     <div id="section-work" class="section">
-        <p style="margin: 0 0 28px 0; color: #555; font-size: 0.95em;">
-            <span style="color: #c0392b;">*</span> Equal Contribution &nbsp;|&nbsp;
-            <em style="color: #666;">All works will be organized and added soon.</em>
+        <p class="work-note">
+            <span class="star">*</span> Equal Contribution &nbsp;|&nbsp;
+            <em>All works will be organized and added soon.</em>
         </p>
         <div class="publication">
             <h3>🔥 Cheers: Decoupling Patch Details from Semantic Representations Enables Unified Multimodal Comprehension and Generation</h3>
@@ -470,20 +792,34 @@
     <div id="section-moments" class="section">
         <div id="moments-gallery">
             <p class="moments-intro">You'll find many photos of wine here. For me, wine is not an escape from reality but a way of engaging with life. It captures journeys, friendships, conversations, and moments worth remembering, while reminding me to slow down and stay curious about the world.</p>
+            <div class="moments-months">
+                <div class="moments-months-track" id="moments-months-track" role="tablist" aria-label="Browse by month">
+                    <!-- month chips populated by JS -->
+                </div>
+            </div>
             <div class="moments-grid" id="moments-grid">
                 <!-- populated by JS -->
             </div>
         </div>
     </div>
 
-    <div id="moments-lightbox" class="moments-lightbox" aria-hidden="true">
-        <img alt="">
+    <div id="moments-lightbox" class="moments-lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Photo viewer">
+        <button class="lb-close" type="button" aria-label="Close">&times;</button>
+        <button class="lb-prev lb-btn" type="button" aria-label="Previous photo">&#8249;</button>
+        <figure class="lb-figure">
+            <img alt="">
+            <figcaption class="lb-caption">
+                <span class="lb-date"></span>
+                <span class="lb-counter"></span>
+            </figcaption>
+        </figure>
+        <button class="lb-next lb-btn" type="button" aria-label="Next photo">&#8250;</button>
     </div>
     
     <footer>
-        <div style="margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+        <div class="footer-top">
             <span>Last updated: June 18, 2026</span>
-            <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" style="text-decoration: none; color: var(--link-color); font-size: 1.1em;">🔝 Back to Top</a>
+            <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">🔝 Back to Top</a>
         </div>
         &copy; <span id="year"></span> MetaPDa. All rights reserved.
     </footer>
@@ -500,88 +836,160 @@
         return src.slice(0, dot) + '.thumb.webp';
     }
 
+    // Flat, ordered list of every photo: { src, date, idxInDay, dayCount }.
+    // Built during grid rendering so the lightbox can navigate across photos.
+    window.__MOMENTS_FLAT__ = window.__MOMENTS_FLAT__ || [];
+    let __lbIndex = -1;
+
+    function closeLightbox(lb) {
+        lb.classList.remove('open');
+        lb.setAttribute('aria-hidden', 'true');
+        lb.querySelector('img').removeAttribute('src');
+        __lbIndex = -1;
+    }
+
+    function showLightboxImage(lb, index) {
+        const list = window.__MOMENTS_FLAT__;
+        if (index < 0 || index >= list.length) return;
+        __lbIndex = index;
+
+        const entry = list[index];
+        lb.querySelector('img').src = entry.src;
+        lb.querySelector('.lb-date').textContent = entry.date;
+        lb.querySelector('.lb-counter').textContent = (entry.idxInDay + 1) + ' / ' + entry.dayCount;
+
+        lb.querySelector('.lb-prev').disabled = (index === 0);
+        lb.querySelector('.lb-next').disabled = (index === list.length - 1);
+    }
+
+    function stepLightbox(lb, delta) {
+        const next = __lbIndex + delta;
+        if (next >= 0 && next < window.__MOMENTS_FLAT__.length) {
+            showLightboxImage(lb, next);
+        }
+    }
+
     function ensureLightbox() {
         const lb = document.getElementById('moments-lightbox');
         if (!lb || lb.dataset.bound) return;
         lb.dataset.bound = '1';
 
-        lb.addEventListener('click', () => {
-            lb.classList.remove('open');
-            lb.setAttribute('aria-hidden', 'true');
-            lb.querySelector('img').removeAttribute('src');
-        });
+        // Click on the dark backdrop (but not the figure/buttons) closes.
+        lb.addEventListener('click', () => closeLightbox(lb));
+        lb.querySelector('.lb-figure').addEventListener('click', (e) => e.stopPropagation());
 
-        lb.querySelector('img').addEventListener('click', (e) => e.stopPropagation());
+        lb.querySelector('.lb-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeLightbox(lb);
+        });
+        lb.querySelector('.lb-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            stepLightbox(lb, -1);
+        });
+        lb.querySelector('.lb-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            stepLightbox(lb, 1);
+        });
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && lb.classList.contains('open')) {
-                lb.classList.remove('open');
-                lb.setAttribute('aria-hidden', 'true');
-                lb.querySelector('img').removeAttribute('src');
-            }
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox(lb);
+            else if (e.key === 'ArrowLeft') stepLightbox(lb, -1);
+            else if (e.key === 'ArrowRight') stepLightbox(lb, 1);
         });
+
+        // Swipe navigation on touch devices.
+        let touchStartX = 0;
+        lb.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].clientX;
+        }, { passive: true });
+        lb.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(dx) > 40) stepLightbox(lb, dx < 0 ? 1 : -1);
+        }, { passive: true });
     }
 
-    function openMomentLightbox(fullSrc) {
+    function openMomentLightbox(index) {
         ensureLightbox();
         const lb = document.getElementById('moments-lightbox');
-        const img = lb.querySelector('img');
-        img.src = fullSrc;
+        showLightboxImage(lb, index);
         lb.classList.add('open');
         lb.setAttribute('aria-hidden', 'false');
     }
 
-    function switchTab(tabId) {
-        // Update nav links
-        document.getElementById('nav-home').classList.remove('active');
-        document.getElementById('nav-work').classList.remove('active');
-        document.getElementById('nav-moments').classList.remove('active');
-        document.getElementById('nav-' + tabId).classList.add('active');
+    var TABS = ['home', 'work', 'moments'];
 
-        // Update sections
-        document.getElementById('section-home').classList.remove('active');
-        document.getElementById('section-work').classList.remove('active');
-        document.getElementById('section-moments').classList.remove('active');
-        document.getElementById('section-' + tabId).classList.add('active');
+    function switchTab(tabId, updateHash) {
+        if (TABS.indexOf(tabId) === -1) tabId = 'home';
+
+        document.querySelectorAll('nav button').forEach(function (btn) {
+            btn.classList.toggle('active', btn.id === 'nav-' + tabId);
+        });
+        document.querySelectorAll('.section').forEach(function (sec) {
+            sec.classList.toggle('active', sec.id === 'section-' + tabId);
+        });
+
+        // Keep the URL hash in sync so the tab survives refresh and can be shared.
+        // Use replaceState to avoid the browser jumping/scrolling to the element.
+        if (updateHash !== false) {
+            history.replaceState(null, '', '#' + tabId);
+        }
 
         if (tabId === 'moments') {
             initMomentsLazyLoad();
         }
     }
 
-    function initMomentsLazyLoad() {
-        // Only init once
-        if (window.__momentsLazyInited) return;
-        window.__momentsLazyInited = true;
+    const PLACEHOLDER_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    let __momentsObserver = null;
 
+    function toMonthLabel(key) {
+        const parts = key.split('-');
+        const m = parseInt(parts[1], 10);
+        return (MONTH_NAMES[m - 1] || parts[1]) + ' ' + parts[0];
+    }
+
+    // Group day objects into months, preserving the (newest-first) data order.
+    function buildMonthGroups(data) {
+        const groups = [];
+        const byKey = {};
+        for (const day of data) {
+            if (!day.images || day.images.length === 0) continue;
+            const key = (day.date || '').slice(0, 7);
+            if (!byKey[key]) {
+                byKey[key] = { key: key, label: toMonthLabel(key), days: [] };
+                groups.push(byKey[key]);
+            }
+            byKey[key].days.push(day);
+        }
+        return groups;
+    }
+
+    // Render only the photos for a single month into the grid.
+    function renderMonthPhotos(group) {
         const grid = document.getElementById('moments-grid');
         if (!grid) return;
 
-        const PLACEHOLDER_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+        grid.innerHTML = '';
+        const flat = [];
+        window.__MOMENTS_FLAT__ = flat;
+        __lbIndex = -1;
 
-        // Render all images into the grid as a flat sequence.
-        // Requirement:
-        // - images are packed tightly; responsive column count
-        // - reserve the SAME label space above EVERY image
-        // - only the FIRST image of each day shows the date text
-        const momentsData = window.__MOMENTS_DATA__ || [];
-
-        for (const day of momentsData) {
-            if (!day.images || day.images.length === 0) continue;
+        for (const day of group.days) {
+            const dayCount = day.images.length;
 
             day.images.forEach((src, idx) => {
-                // Each image becomes one tile: [label placeholder] + [square image]
+                const flatIndex = flat.length;
+                flat.push({ src: src, date: day.date, idxInDay: idx, dayCount: dayCount });
+
                 const tile = document.createElement('div');
                 tile.className = 'moments-tile';
 
                 const label = document.createElement('div');
                 label.className = 'moments-label';
-                if (idx === 0) {
-                    label.textContent = day.date;
-                } else {
-                    label.textContent = day.date; // keep for accessibility/select but hidden
-                    label.classList.add('is-empty');
-                }
+                label.textContent = day.date;
+                if (idx !== 0) label.classList.add('is-empty');
 
                 const item = document.createElement('div');
                 item.className = 'moments-item';
@@ -592,7 +1000,7 @@
                 img.setAttribute('data-full-src', src);
                 img.src = PLACEHOLDER_SRC;
                 img.alt = `${day.date} Image ${idx + 1}`;
-                img.addEventListener('click', () => openMomentLightbox(src));
+                img.addEventListener('click', () => openMomentLightbox(flatIndex));
                 img.addEventListener('error', function onThumbError() {
                     const fullSrc = img.getAttribute('data-full-src');
                     if (fullSrc && !img.src.endsWith(fullSrc)) {
@@ -608,9 +1016,8 @@
             });
         }
 
-        // Lazy-load images when near viewport
-        const imgs = grid.querySelectorAll('img.lazy-moment[data-src]');
-        const observer = new IntersectionObserver((entries, obs) => {
+        if (__momentsObserver) __momentsObserver.disconnect();
+        __momentsObserver = new IntersectionObserver((entries, obs) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
                 const img = entry.target;
@@ -621,15 +1028,156 @@
                 }
                 obs.unobserve(img);
             });
-        }, {
-            root: null,
-            rootMargin: '600px 0px',
-            threshold: 0.01
+        }, { root: null, rootMargin: '600px 0px', threshold: 0.01 });
+        grid.querySelectorAll('img.lazy-moment[data-src]').forEach(img => __momentsObserver.observe(img));
+    }
+
+    function initMomentsLazyLoad() {
+        // Only init once
+        if (window.__momentsInited) return;
+        window.__momentsInited = true;
+
+        const groups = buildMonthGroups(window.__MOMENTS_DATA__ || []);
+        const track = document.getElementById('moments-months-track');
+        if (groups.length === 0 || !track) return;
+
+        const chips = [];
+        let activeIndex = -1;
+
+        function selectMonth(index, doScroll) {
+            if (index < 0 || index >= groups.length) return;
+            if (index !== activeIndex) {
+                activeIndex = index;
+                chips.forEach((c, i) => c.classList.toggle('active', i === index));
+                renderMonthPhotos(groups[index]);
+            }
+            if (doScroll && chips[index]) {
+                chips[index].scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        groups.forEach((g, i) => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'month-chip';
+            chip.textContent = g.label;
+            chip.setAttribute('role', 'tab');
+            chip.addEventListener('click', () => selectMonth(i, true));
+            track.appendChild(chip);
+            chips.push(chip);
         });
-        imgs.forEach(img => observer.observe(img));
+
+        // Whichever month is nearest the horizontal center becomes active.
+        function nearestCenterIndex() {
+            const rect = track.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            let best = 0, bestDist = Infinity;
+            chips.forEach((chip, i) => {
+                const r = chip.getBoundingClientRect();
+                const d = Math.abs((r.left + r.width / 2) - cx);
+                if (d < bestDist) { bestDist = d; best = i; }
+            });
+            return best;
+        }
+
+        let scrollTimer = null;
+        track.addEventListener('scroll', () => {
+            if (scrollTimer) clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => selectMonth(nearestCenterIndex(), false), 120);
+        });
+
+        // Don't let arrow keys scroll/switch months (only wheel, drag, touch, click).
+        track.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+            }
+        });
+
+        // Mouse wheel -> horizontal scroll.
+        track.addEventListener('wheel', (e) => {
+            const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+            if (delta !== 0) {
+                track.scrollLeft += delta;
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Mouse drag to scroll (touch uses native scrolling).
+        let dragging = false, startX = 0, startScroll = 0, moved = false;
+        track.addEventListener('pointerdown', (e) => {
+            if (e.pointerType !== 'mouse' || e.button !== 0) return;
+            dragging = true;
+            moved = false;
+            startX = e.clientX;
+            startScroll = track.scrollLeft;
+            track.classList.add('dragging');
+        });
+        track.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) > 3) moved = true;
+            track.scrollLeft = startScroll - dx;
+        });
+        function endDrag() {
+            if (!dragging) return;
+            dragging = false;
+            track.classList.remove('dragging');
+        }
+        track.addEventListener('pointerup', endDrag);
+        track.addEventListener('pointercancel', endDrag);
+        track.addEventListener('pointerleave', endDrag);
+        // Suppress the click that follows a drag so it doesn't select a chip.
+        track.addEventListener('click', (e) => {
+            if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; }
+        }, true);
+
+        // Initial: show the most recent month, centered (no animation).
+        activeIndex = 0;
+        chips[0].classList.add('active');
+        renderMonthPhotos(groups[0]);
+        chips[0].scrollIntoView({ inline: 'center', block: 'nearest' });
     }
     
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // --- Theme (light/dark) ---
+    (function initTheme() {
+        var toggle = document.getElementById('theme-toggle');
+        var stored = null;
+        try { stored = localStorage.getItem('theme'); } catch (e) {}
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = stored || (prefersDark ? 'dark' : 'light');
+
+        function applyTheme(t) {
+            if (t === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                toggle.textContent = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                toggle.textContent = '🌙';
+            }
+        }
+
+        applyTheme(theme);
+
+        toggle.addEventListener('click', function () {
+            theme = (theme === 'dark') ? 'light' : 'dark';
+            applyTheme(theme);
+            try { localStorage.setItem('theme', theme); } catch (e) {}
+        });
+    })();
+
+    // --- Restore active tab from URL hash (e.g. #work) on load ---
+    (function initTabFromHash() {
+        var tab = (location.hash || '').replace('#', '');
+        if (TABS.indexOf(tab) !== -1) {
+            switchTab(tab, false);
+        }
+        window.addEventListener('hashchange', function () {
+            var t = (location.hash || '').replace('#', '');
+            if (TABS.indexOf(t) !== -1) switchTab(t, false);
+        });
+    })();
 </script>
 
 </body>
