@@ -18,6 +18,24 @@
             --font-mono: 'Courier New', monospace; /* Monospaced for technical feel */
         }
 
+        /* Georgia ships old-style (uneven) figures on most systems and often has no
+           lining-nums OpenType feature, so CSS font-variant-numeric alone does nothing.
+           Route digits (and '.') through a lining-figure serif instead.
+           Declare both regular and bold so h3 bold weight matches surrounding Georgia. */
+        @font-face {
+            font-family: 'Lining Digits';
+            src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif'), local('Nimbus Roman');
+            font-weight: 400;
+            unicode-range: U+0030-0039, U+002E;
+        }
+
+        @font-face {
+            font-family: 'Lining Digits';
+            src: local('Times New Roman Bold'), local('TimesNewRomanPS-BoldMT'), local('Liberation Serif Bold'), local('Nimbus Roman Bold');
+            font-weight: 700;
+            unicode-range: U+0030-0039, U+002E;
+        }
+
         [data-theme="dark"] {
             --bg-color: #1b1a18;
             --text-color: #e6e1d8;
@@ -168,6 +186,14 @@
             font-size: 1.15em;
             font-weight: bold;
             line-height: 1.4;
+            font-family: 'Lining Digits', var(--font-main);
+            font-variant-numeric: lining-nums;
+        }
+
+        /* Times lining figures are optically lighter than Georgia Bold; thicken slightly. */
+        .publication h3 .lnum {
+            -webkit-text-stroke: 0.5px currentColor;
+            paint-order: stroke fill;
         }
 
         .publication .authors {
@@ -751,6 +777,17 @@
             <span class="star">*</span> Equal Contribution &nbsp;|&nbsp;
             <em>All works will be organized and added soon.</em>
         </p>
+        <div class="publication">
+            <h3>🔥 Qwen<span class="lnum">3.8</span>-Max: A New Bar for Coding and Cowork</h3>
+            <p class="authors">
+                Qwen Team
+            </p>
+            <p class="venue">
+                <em>Technical Report</em>
+                [<a href="https://qwen.ai/blog?id=qwen3.8" target="_blank">Blog</a>]
+            </p>
+        </div>
+
         <div class="publication">
             <h3>🔥 Cheers: Decoupling Patch Details from Semantic Representations Enables Unified Multimodal Comprehension and Generation</h3>
             <p class="authors">
