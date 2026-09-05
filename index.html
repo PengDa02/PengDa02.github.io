@@ -6,16 +6,23 @@
     <title>Da Peng</title>
     <style>
         :root {
+            color-scheme: light;
             --bg-color: #f4efe6; /* Warm, paper-like background */
             --text-color: #2c2c2c; /* Dark charcoal text */
             --muted-color: #555; /* Secondary / muted text */
-            --faint-color: #888; /* Faint text (footer, timestamps) */
+            --faint-color: #6f6a60; /* Faint text (footer, timestamps); ~4.7:1 on paper bg, WCAG AA */
             --accent-color: #8b7355; /* Soft brown accent */
+            --accent-soft: rgba(139, 115, 85, 0.18); /* Accent wash: selection, subtle hovers */
             --link-color: #5d6d7e; /* Muted blue for links */
             --card-bg: #ece5d8; /* Slightly darker surface than bg */
-            --shadow-color: rgba(0, 0, 0, 0.10);
+            --shadow-color: rgba(94, 75, 51, 0.14); /* Shadow tinted to bg hue, no pure black */
+            --radius-media: 6px; /* One radius scale for all media (grid tiles + lightbox) */
+            /* Glass material tokens (web approximation, see .theme-toggle note) */
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.65);
+            --glass-highlight: rgba(255, 255, 255, 0.80);
             --font-main: 'Georgia', serif; /* Classic, academic font */
-            --font-mono: 'Courier New', monospace; /* Monospaced for technical feel */
+            --font-mono: 'SF Mono', 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, 'Courier New', monospace;
         }
 
         /* Georgia ships old-style (uneven) figures on most systems and often has no
@@ -37,14 +44,19 @@
         }
 
         [data-theme="dark"] {
+            color-scheme: dark;
             --bg-color: #1b1a18;
             --text-color: #e6e1d8;
             --muted-color: #b0a99c;
             --faint-color: #8c8578;
             --accent-color: #b89a6f;
+            --accent-soft: rgba(184, 154, 111, 0.22);
             --link-color: #9db4c9;
             --card-bg: #262421;
             --shadow-color: rgba(0, 0, 0, 0.45);
+            --glass-bg: rgba(38, 36, 33, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.14);
+            --glass-highlight: rgba(255, 255, 255, 0.16);
         }
 
         body {
@@ -57,9 +69,28 @@
             display: flex;
             justify-content: center;
             transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
-        /* Theme toggle button */
+        ::selection {
+            background: var(--accent-soft);
+        }
+
+        /* Keyboard focus: visible accent ring. Nav buttons keep their own
+           underline-style focus (higher specificity below wins for them). */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Theme toggle button.
+           Glass note: web glassmorphism approximation of Apple Liquid Glass
+           (backdrop-filter + layered border + inner highlight). Apple documents
+           Liquid Glass for Apple platforms only; this is NOT official material.
+           Applied to a fixed element only, never to scrolling containers. */
         .theme-toggle {
             position: fixed;
             top: 20px;
@@ -68,8 +99,10 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            border: 1px solid var(--accent-color);
-            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
             color: var(--text-color);
             font-size: 1.1em;
             line-height: 1;
@@ -77,7 +110,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 6px var(--shadow-color);
+            box-shadow:
+                inset 0 1px 0 var(--glass-highlight),
+                0 4px 12px var(--shadow-color);
             transition: transform 0.2s ease, background-color 0.3s ease;
         }
 
@@ -129,11 +164,14 @@
 
         .contact a {
             color: var(--link-color);
-            text-decoration: none;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s ease, color 0.2s ease;
         }
 
         .contact a:hover {
-            text-decoration: underline;
+            text-decoration-color: var(--accent-color);
         }
 
         nav {
@@ -219,11 +257,14 @@
 
         .publication .venue a {
             color: var(--link-color);
-            text-decoration: none;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s ease, color 0.2s ease;
         }
 
         .publication .venue a:hover {
-            text-decoration: underline;
+            text-decoration-color: var(--accent-color);
         }
 
         /* moments Section Styles */
@@ -308,6 +349,7 @@
             border-color: var(--accent-color);
             font-weight: bold;
             transform: scale(1.05);
+            box-shadow: 0 2px 6px var(--shadow-color);
         }
 
         .moments-grid {
@@ -367,15 +409,16 @@
             aspect-ratio: 1 / 1; /* square tiles; keeps layout tight */
             height: auto;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: var(--radius-media);
             box-shadow: 0 3px 6px var(--shadow-color);
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             display: block;
             cursor: zoom-in;
         }
 
         .moments-item img:hover {
             transform: scale(1.02);
+            box-shadow: 0 6px 14px var(--shadow-color);
         }
 
         .moments-lightbox {
@@ -384,6 +427,8 @@
             inset: 0;
             z-index: 1000;
             background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             align-items: center;
             justify-content: center;
             padding: 24px;
@@ -409,7 +454,7 @@
             max-width: min(95vw, 1400px);
             max-height: 86vh;
             object-fit: contain;
-            border-radius: 6px;
+            border-radius: var(--radius-media);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
             cursor: default;
         }
@@ -428,6 +473,8 @@
             color: rgba(255, 255, 255, 0.55);
         }
 
+        /* Lightbox controls: same glass approximation, tuned for photo backdrops
+           (media-overlay is the context where glass reads best). */
         .lb-btn {
             position: absolute;
             top: 50%;
@@ -435,8 +482,12 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.05)),
+                rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
             color: #fff;
             font-size: 2em;
             line-height: 1;
@@ -444,12 +495,18 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.30),
+                0 8px 24px rgba(0, 0, 0, 0.25);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
         .lb-btn:hover {
-            background: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.38);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.40),
+                0 8px 28px rgba(0, 0, 0, 0.32);
         }
 
         .lb-btn:disabled {
@@ -467,8 +524,12 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.05)),
+                rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
             color: #fff;
             font-size: 1.6em;
             line-height: 1;
@@ -476,11 +537,17 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.30),
+                0 8px 24px rgba(0, 0, 0, 0.25);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .lb-close:hover {
-            background: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.38);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.40),
+                0 8px 28px rgba(0, 0, 0, 0.32);
         }
 
         @media (max-width: 600px) {
@@ -578,9 +645,16 @@
         }
 
         .footer-top a {
-            text-decoration: none;
             color: var(--link-color);
             font-size: 1.1em;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s ease, color 0.2s ease;
+        }
+
+        .footer-top a:hover {
+            text-decoration-color: var(--accent-color);
         }
 
         /* Social links in header */
@@ -624,11 +698,14 @@
         .about-me a,
         .about-me a:visited {
             color: var(--link-color);
-            text-decoration: none;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s ease, color 0.2s ease;
         }
 
         .about-me a:hover {
-            text-decoration: underline;
+            text-decoration-color: var(--accent-color);
         }
 
         .news-list {
@@ -657,6 +734,44 @@
 
         .work-note em {
             color: var(--muted-color);
+        }
+
+        /* Reduced transparency: solid fills, no backdrop blur.
+           Browser support for this query is uneven; harmless where unsupported. */
+        @media (prefers-reduced-transparency: reduce) {
+            .theme-toggle {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                background: var(--card-bg);
+            }
+            .lb-btn,
+            .lb-close {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                background: rgba(24, 22, 20, 0.85);
+            }
+        }
+
+        /* Reduced motion (MOTION 4 -> must degrade): collapse animation,
+           smooth scrolling, and hover transforms to instant. */
+        @media (prefers-reduced-motion: reduce) {
+            .section.active {
+                animation: none;
+            }
+            .moments-months-track {
+                scroll-behavior: auto;
+            }
+            .moments-item img,
+            .month-chip,
+            .theme-toggle,
+            .social-links a {
+                transition: none;
+            }
+            .moments-item img:hover,
+            .theme-toggle:hover,
+            .social-links a:hover {
+                transform: none;
+            }
         }
 
         /* Responsive: tablets and phones */
