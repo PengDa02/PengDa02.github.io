@@ -627,6 +627,135 @@
             line-height: 1.3;
         }
 
+        /* Visitor map (country-level, cookieless).
+           Counts live on a public counter, not in this repo; see script below. */
+        .visitor-map {
+            margin-top: 44px;
+            border: 1px solid var(--accent-soft);
+            border-radius: var(--radius-media);
+            background: var(--card-bg);
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .visitor-map-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--accent-soft);
+            color: var(--faint-color);
+            font-size: 0.78em;
+            letter-spacing: 0.04em;
+        }
+
+        .visitor-map-status {
+            color: var(--accent-color);
+        }
+
+        .visitor-map-status::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            vertical-align: 1px;
+        }
+
+        .visitor-map-stage {
+            position: relative;
+            aspect-ratio: 2 / 1;
+            min-height: 220px;
+            overflow: hidden;
+            background: var(--bg-color);
+        }
+
+        .visitor-map-base {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.18;
+            filter: grayscale(1) contrast(0.8);
+            mix-blend-mode: multiply;
+        }
+
+        [data-theme="dark"] .visitor-map-base {
+            opacity: 0.22;
+            filter: grayscale(1) invert(0.92) contrast(0.8);
+            mix-blend-mode: screen;
+        }
+
+        .visitor-pin {
+            --pin-size: 10px;
+            position: absolute;
+            z-index: 2;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            min-width: 40px;
+            color: var(--muted-color);
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .visitor-pin::before {
+            content: "";
+            width: var(--pin-size);
+            height: var(--pin-size);
+            border-radius: 50%;
+            border: 2px solid var(--bg-color);
+            background: var(--accent-color);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .visitor-pin.is-current::before {
+            box-shadow: 0 0 0 5px var(--accent-soft), 0 2px 10px var(--shadow-color);
+        }
+
+        .visitor-pin strong {
+            padding: 2px 5px;
+            border-radius: 4px;
+            background: var(--card-bg);
+            border: 1px solid var(--accent-soft);
+            color: var(--text-color);
+            font-size: 0.78em;
+            line-height: 1.2;
+        }
+
+        .visitor-pin small {
+            font-size: 0.68em;
+            color: var(--faint-color);
+            line-height: 1;
+        }
+
+        .visitor-map-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 9px 14px;
+            border-top: 1px solid var(--accent-soft);
+            color: var(--faint-color);
+            font-size: 0.72em;
+        }
+
+        .visitor-map-foot a {
+            color: var(--link-color);
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s ease;
+        }
+
+        .visitor-map-foot a:hover {
+            text-decoration-color: var(--accent-color);
+        }
+
         /* Footer */
         footer {
             margin-top: 60px;
@@ -968,6 +1097,20 @@
         <button class="lb-next lb-btn" type="button" aria-label="Next photo">&#8250;</button>
     </div>
     
+    <div class="visitor-map" id="visitor-map">
+        <div class="visitor-map-head">
+            <span>Visitors</span>
+            <span class="visitor-map-status" id="visitor-map-status">Connecting</span>
+        </div>
+        <div class="visitor-map-stage" role="img" aria-label="World map with approximate visitor counts by country">
+            <img class="visitor-map-base" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/BlankMap-Equirectangular.svg/960px-BlankMap-Equirectangular.svg.png" loading="lazy" decoding="async" alt="">
+        </div>
+        <div class="visitor-map-foot">
+            <span>Approximate daily visits by country. One visit per browser each day. No cookie.</span>
+            <span>Total <strong id="visitor-total">—</strong></span>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-top">
             <span>Last updated: September 24, 2026</span>
@@ -1329,6 +1472,147 @@
             var t = (location.hash || '').replace('#', '');
             if (TABS.indexOf(t) !== -1) switchTab(t, false);
         });
+    })();
+
+    // --- Visitor map: country-level daily counts, cookieless ---
+    // Counts are stored on a public counter (CountAPI), not in this repo.
+    // Country lookup uses api.country.is; only the country code is used.
+    (function initVisitorMap() {
+        var API = 'https://countapi.mileshilliard.com/api/v1';
+        var PREFIX = 'pengda02-homepage-vmap-202610-7f3a1c';
+        var COUNTRIES = {
+            CN: { x: 78, y: 34, name: 'China' },
+            US: { x: 20, y: 33, name: 'United States' },
+            GB: { x: 47, y: 24, name: 'United Kingdom' },
+            DE: { x: 52, y: 25, name: 'Germany' },
+            FR: { x: 48, y: 27, name: 'France' },
+            JP: { x: 85, y: 32, name: 'Japan' },
+            SG: { x: 76, y: 48, name: 'Singapore' },
+            IN: { x: 70, y: 40, name: 'India' },
+            AU: { x: 85, y: 68, name: 'Australia' },
+            CA: { x: 18, y: 24, name: 'Canada' },
+            KR: { x: 82, y: 32, name: 'South Korea' },
+            NL: { x: 50, y: 24, name: 'Netherlands' },
+            CH: { x: 50, y: 27, name: 'Switzerland' },
+            SE: { x: 53, y: 20, name: 'Sweden' },
+            IT: { x: 52, y: 29, name: 'Italy' },
+            ES: { x: 47, y: 30, name: 'Spain' },
+            BR: { x: 32, y: 58, name: 'Brazil' },
+            RU: { x: 68, y: 20, name: 'Russia' },
+            HK: { x: 79, y: 38, name: 'Hong Kong' },
+            TW: { x: 81, y: 36, name: 'Taiwan' }
+        };
+        var REGION_FALLBACK = {
+            NA: { x: 23, y: 31, name: 'North America' },
+            SA: { x: 35, y: 63, name: 'South America' },
+            EU: { x: 53, y: 27, name: 'Europe' },
+            AF: { x: 55, y: 51, name: 'Africa' },
+            AS: { x: 74, y: 34, name: 'Asia' },
+            OC: { x: 86, y: 69, name: 'Oceania' }
+        };
+        var COUNTRY_REGION = {
+            CN: 'AS', JP: 'AS', SG: 'AS', IN: 'AS', KR: 'AS', HK: 'AS', TW: 'AS', RU: 'AS',
+            US: 'NA', CA: 'NA', BR: 'SA',
+            GB: 'EU', DE: 'EU', FR: 'EU', NL: 'EU', CH: 'EU', SE: 'EU', IT: 'EU', ES: 'EU',
+            AU: 'OC'
+        };
+
+        var stage = document.querySelector('.visitor-map-stage');
+        var statusEl = document.getElementById('visitor-map-status');
+        var totalEl = document.getElementById('visitor-total');
+        if (!stage || !statusEl || !totalEl) return;
+
+        var format = new Intl.NumberFormat('en-US');
+        var keyFor = function (code) { return PREFIX + '-' + code.toLowerCase(); };
+        var requestCount = function (key, increment) {
+            var action = increment ? 'hit' : 'get';
+            return fetch(API + '/' + action + '/' + key, { cache: 'no-store' })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('Counter request failed: ' + res.status);
+                    return res.json();
+                })
+                .then(function (data) { return Number(data.value) || 0; });
+        };
+
+        var pinFor = function (code, info) {
+            var pin = document.createElement('div');
+            pin.className = 'visitor-pin';
+            pin.dataset.code = code;
+            pin.style.left = info.x + '%';
+            pin.style.top = info.y + '%';
+            pin.innerHTML = '<strong>—</strong><small>' + info.name + '</small>';
+            return pin;
+        };
+
+        var render = function (counts, currentCode) {
+            totalEl.textContent = format.format(counts.TOTAL || 0);
+            stage.querySelectorAll('.visitor-pin').forEach(function (pin) {
+                var code = pin.dataset.code;
+                var count = counts[code] || 0;
+                pin.querySelector('strong').textContent = format.format(count);
+                pin.style.setProperty('--pin-size', (10 + Math.min(12, Math.log10(count + 1) * 5)) + 'px');
+                pin.classList.toggle('is-current', code === currentCode);
+            });
+            statusEl.textContent = currentCode ? 'Live · ' + (COUNTRIES[currentCode] || REGION_FALLBACK[COUNTRY_REGION[currentCode]] || { name: currentCode }).name : 'Live';
+        };
+
+        var start = function () {
+            var currentCode = null;
+            statusEl.textContent = 'Locating';
+            fetch('https://api.country.is/', { cache: 'no-store' })
+                .then(function (res) { return res.ok ? res.json() : null; })
+                .then(function (location) {
+                    if (location && location.country) {
+                        currentCode = String(location.country).toUpperCase();
+                    }
+
+                    var today = new Date().toISOString().slice(0, 10);
+                    var lastCounted = null;
+                    try { lastCounted = localStorage.getItem(PREFIX + '-last-counted'); } catch (_) {}
+
+                    var hits = [requestCount(keyFor('total'), true)];
+                    if (currentCode) {
+                        var info = COUNTRIES[currentCode] || REGION_FALLBACK[COUNTRY_REGION[currentCode]];
+                        if (info) {
+                            if (!stage.querySelector('.visitor-pin[data-code="' + currentCode + '"]')) {
+                                stage.appendChild(pinFor(currentCode, info));
+                            }
+                            hits.push(requestCount(keyFor(currentCode), true));
+                        }
+                    }
+
+                    return Promise.allSettled(hits).then(function (results) {
+                        if (results.some(function (r) { return r.status === 'fulfilled'; })) {
+                            try { localStorage.setItem(PREFIX + '-last-counted', today); } catch (_) {}
+                        }
+                    });
+                })
+                .then(function () {
+                    statusEl.textContent = 'Loading';
+                    var codes = Object.keys(COUNTRIES);
+                    var pins = stage.querySelectorAll('.visitor-pin');
+                    pins.forEach(function (pin) {
+                        if (codes.indexOf(pin.dataset.code) === -1) codes.push(pin.dataset.code);
+                    });
+                    var reads = [requestCount(keyFor('total')).then(function (v) { return ['TOTAL', v]; }).catch(function () { return ['TOTAL', 0]; })];
+                    codes.forEach(function (code) {
+                        reads.push(requestCount(keyFor(code)).then(function (v) { return [code, v]; }).catch(function () { return [code, 0]; }));
+                    });
+                    return Promise.all(reads).then(function (entries) {
+                        render(Object.fromEntries(entries), currentCode);
+                    });
+                })
+                .catch(function () {
+                    statusEl.textContent = 'Offline';
+                    totalEl.textContent = '—';
+                });
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start, { once: true });
+        } else {
+            start();
+        }
     })();
 </script>
 
