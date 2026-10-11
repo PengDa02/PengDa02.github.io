@@ -839,7 +839,9 @@
     <nav>
         <button id="nav-home" type="button" class="active" onclick="switchTab('home')">ABOUT ME</button>
         <button id="nav-work" type="button" onclick="switchTab('work')">WORK</button>
+        <!-- TEMP-HIDDEN: Moments nav (restore by uncommenting)
         <button id="nav-moments" type="button" onclick="switchTab('moments')">MOMENTS</button>
+        -->
     </nav>
 
     <div id="section-home" class="section active">
@@ -941,19 +943,19 @@
         </div>
     </div>
 
+    <!-- TEMP-HIDDEN: Moments section (restore by uncommenting)
     <div id="section-moments" class="section">
         <div id="moments-gallery">
             <p class="moments-intro">You'll find many photos of wine here. For me, wine is not an escape from reality but a way of engaging with life. It captures journeys, friendships, conversations, and moments worth remembering, while reminding me to slow down and stay curious about the world.</p>
             <div class="moments-months">
                 <div class="moments-months-track" id="moments-months-track" role="tablist" aria-label="Browse by month">
-                    <!-- month chips populated by JS -->
                 </div>
             </div>
             <div class="moments-grid" id="moments-grid">
-                <!-- populated by JS -->
             </div>
         </div>
     </div>
+    -->
 
     <div id="moments-lightbox" class="moments-lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Photo viewer">
         <button class="lb-close" type="button" aria-label="Close">&times;</button>
@@ -1069,7 +1071,8 @@
         lb.setAttribute('aria-hidden', 'false');
     }
 
-    var TABS = ['home', 'work', 'moments'];
+    // TEMP-HIDDEN: 'moments' tab removed while the section is commented out (restore: add 'moments' back)
+    var TABS = ['home', 'work'];
 
     function switchTab(tabId, updateHash) {
         if (TABS.indexOf(tabId) === -1) tabId = 'home';
