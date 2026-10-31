@@ -7,265 +7,314 @@
     <style>
         :root {
             color-scheme: light;
-            --bg-color: #f4efe6; /* Warm, paper-like background */
-            --text-color: #2c2c2c; /* Dark charcoal text */
-            --muted-color: #555; /* Secondary / muted text */
-            --faint-color: #6f6a60; /* Faint text (footer, timestamps); ~4.7:1 on paper bg, WCAG AA */
-            --accent-color: #8b7355; /* Soft brown accent */
-            --accent-soft: rgba(139, 115, 85, 0.18); /* Accent wash: selection, subtle hovers */
-            --link-color: #5d6d7e; /* Muted blue for links */
-            --card-bg: #ece5d8; /* Slightly darker surface than bg */
-            --shadow-color: rgba(94, 75, 51, 0.14); /* Shadow tinted to bg hue, no pure black */
-            --radius-media: 6px; /* One radius scale for all media (grid tiles + lightbox) */
-            /* Glass material tokens (web approximation, see .theme-toggle note) */
-            --glass-bg: rgba(255, 255, 255, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.65);
-            --glass-highlight: rgba(255, 255, 255, 0.80);
-            --font-main: 'Georgia', serif; /* Classic, academic font */
-            --font-mono: 'SF Mono', 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, 'Courier New', monospace;
-        }
-
-        /* Georgia ships old-style (uneven) figures on most systems and often has no
-           lining-nums OpenType feature, so CSS font-variant-numeric alone does nothing.
-           Route digits (and '.') through a lining-figure serif instead.
-           Declare both regular and bold so h3 bold weight matches surrounding Georgia. */
-        @font-face {
-            font-family: 'Lining Digits';
-            src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif'), local('Nimbus Roman');
-            font-weight: 400;
-            unicode-range: U+0030-0039, U+002E;
-        }
-
-        @font-face {
-            font-family: 'Lining Digits';
-            src: local('Times New Roman Bold'), local('TimesNewRomanPS-BoldMT'), local('Liberation Serif Bold'), local('Nimbus Roman Bold');
-            font-weight: 700;
-            unicode-range: U+0030-0039, U+002E;
+            --bg-color: #f8f7f3;
+            --text-color: #252a2c;
+            --muted-color: #565e61;
+            --faint-color: #697174;
+            --accent-color: #416878;
+            --accent-soft: rgba(90, 133, 150, 0.18);
+            --link-color: #365f70;
+            --line-color: #dcded9;
+            --card-bg: #efefea;
+            --shadow-color: rgba(37, 42, 44, 0.12);
+            --radius-media: 4px;
+            --font-main: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            --font-display: 'Iowan Old Style', 'Baskerville', 'Palatino Linotype', 'Georgia', serif;
+            --font-mono: 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+            --hero-bg: #142532;
+            --hero-text: #f4f3ed;
+            --hero-muted: #c1cad0;
+            --hero-line: rgba(205, 219, 228, 0.25);
+            --hero-accent: #bdd3df;
         }
 
         [data-theme="dark"] {
             color-scheme: dark;
-            --bg-color: #1b1a18;
-            --text-color: #e6e1d8;
-            --muted-color: #b0a99c;
-            --faint-color: #8c8578;
-            --accent-color: #b89a6f;
-            --accent-soft: rgba(184, 154, 111, 0.22);
-            --link-color: #9db4c9;
-            --card-bg: #262421;
-            --shadow-color: rgba(0, 0, 0, 0.45);
-            --glass-bg: rgba(38, 36, 33, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.14);
-            --glass-highlight: rgba(255, 255, 255, 0.16);
+            --bg-color: #1b2022;
+            --text-color: #e8eae6;
+            --muted-color: #b2bcbe;
+            --faint-color: #98a5a9;
+            --accent-color: #a3c0c9;
+            --accent-soft: rgba(163, 192, 201, 0.18);
+            --link-color: #b2cfd8;
+            --line-color: #384144;
+            --card-bg: #242b2e;
+            --shadow-color: rgba(0, 0, 0, 0.3);
         }
+
+        * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: var(--font-main);
             margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.7;
+            transition: background-color 0.25s ease, color 0.25s ease;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
         }
 
-        ::selection {
-            background: var(--accent-soft);
-        }
+        ::selection { background: var(--accent-soft); }
 
-        /* Keyboard focus: visible accent ring. Nav buttons keep their own
-           underline-style focus (higher specificity below wins for them). */
         a:focus-visible,
         button:focus-visible {
             outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
+            outline-offset: 5px;
         }
 
-        /* Theme toggle button.
-           Glass note: web glassmorphism approximation of Apple Liquid Glass
-           (backdrop-filter + layered border + inner highlight). Apple documents
-           Liquid Glass for Apple platforms only; this is NOT official material.
-           Applied to a fixed element only, never to scrolling containers. */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 900;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px) saturate(160%);
-            -webkit-backdrop-filter: blur(12px) saturate(160%);
+        .masthead a:focus-visible,
+        .masthead button:focus-visible { outline-color: var(--hero-accent); }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 20px;
+            z-index: 1000;
+            padding: 10px 20px;
+            background: var(--bg-color);
             color: var(--text-color);
-            font-size: 1.1em;
-            line-height: 1;
-            cursor: pointer;
+        }
+
+        .skip-link:focus { top: 12px; }
+
+        /* Local artwork: responsive crops keep the mountain on the right. */
+        .masthead {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            background: var(--hero-bg);
+            color: var(--hero-text);
+        }
+
+        .hero-backdrop {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .hero-backdrop img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 50%;
+        }
+
+        /* Protect the text locally; leave the right-hand rock texture visible. */
+        .masthead::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                linear-gradient(90deg, rgba(8, 20, 32, 0.58) 0%, rgba(8, 20, 32, 0.32) 43%, rgba(8, 20, 32, 0.02) 75%),
+                linear-gradient(180deg, rgba(8, 20, 32, 0.50) 0%, transparent 30%, rgba(8, 20, 32, 0.08) 65%, rgba(8, 20, 32, 0.72) 100%);
+        }
+
+        .site-bar, .hero, .nav-shell, .container {
+            width: min(1120px, calc(100% - 96px));
+            margin-inline: auto;
+        }
+
+        .site-bar {
+            height: 78px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--hero-line);
+        }
+
+        .wordmark {
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow:
-                inset 0 1px 0 var(--glass-highlight),
-                0 4px 12px var(--shadow-color);
-            transition: transform 0.2s ease, background-color 0.3s ease;
+            gap: 12px;
+            color: var(--hero-text);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.08);
-        }
-
-        .container {
-            max-width: 1000px;
-            width: 90%;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        header {
-            display: flex;
-            align-items: center;
-            border-bottom: 2px solid var(--text-color);
-            padding-bottom: 20px;
-            margin-bottom: 40px;
-        }
-
-        .profile-img {
-            width: 120px;
-            height: 120px;
+        .wordmark .profile-img {
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             object-fit: cover;
-            margin-right: 30px;
-            border: 2px solid var(--accent-color);
+            object-position: 30% center;
+            border: 1px solid var(--hero-line);
         }
+        .wordmark span { font-weight: 400; color: var(--hero-muted); }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--hero-line);
+            border-radius: 50%;
+            background: rgba(8, 20, 32, 0.5);
+            color: var(--hero-text);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .theme-toggle:hover { border-color: var(--hero-muted); background: #253746; }
+        .theme-toggle svg { width: 17px; height: 17px; }
+        .theme-toggle .sun-icon { display: none; }
+        [data-theme="dark"] .theme-toggle .sun-icon { display: block; }
+        [data-theme="dark"] .theme-toggle .moon-icon { display: none; }
+
+        .hero {
+            padding-block: 72px 80px;
+        }
+
+        .header-info { max-width: 640px; }
+
+        .eyebrow, .section-index, .nav-note, .publication-meta {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+        }
+
+        .header-info .eyebrow { color: var(--hero-accent); margin: 0 0 20px; }
 
         .header-info h1 {
-            margin: 0 0 10px 0;
-            font-size: 2.5em;
-            font-weight: normal;
+            font-family: var(--font-display);
+            font-size: clamp(72px, 8vw, 108px);
+            font-weight: 400;
+            letter-spacing: -0.055em;
+            line-height: 1;
+            margin: 0 0 24px;
         }
 
-        .header-info p {
-            margin: 5px 0;
-            font-style: italic;
-            color: var(--muted-color);
+        .name-period { color: var(--hero-accent); }
+
+        .research-line {
+            margin: 0 0 10px;
+            font-size: clamp(17px, 1.8vw, 21px);
+            letter-spacing: -0.025em;
+            line-height: 1.5;
         }
+
+        .affiliation { margin: 0; color: var(--hero-muted); font-size: 14px; }
 
         .contact {
-            font-family: var(--font-mono);
-            font-size: 0.9em;
-            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 24px;
+            margin-top: 30px;
+            font-size: 12px;
+            color: var(--hero-muted);
         }
 
         .contact a {
-            color: var(--link-color);
-            text-decoration: underline;
-            text-decoration-color: transparent;
-            text-underline-offset: 3px;
-            transition: text-decoration-color 0.2s ease, color 0.2s ease;
+            color: var(--hero-text);
+            text-decoration: none;
+            border-bottom: 1px solid #71858e;
+            padding-bottom: 3px;
+            transition: border-color 0.2s ease;
         }
 
-        .contact a:hover {
-            text-decoration-color: var(--accent-color);
-        }
+        .contact a:hover { border-color: var(--hero-text); }
+        .contact a span { margin-left: 10px; color: var(--hero-accent); }
+        .location { display: inline-flex; gap: 7px; align-items: center; }
+        .location svg { width: 12px; height: 12px; }
 
-        nav {
+        .nav-shell {
             display: flex;
-            gap: 30px;
-            margin-bottom: 40px;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--hero-line);
         }
+
+        nav { display: flex; gap: 36px; }
 
         nav button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 62px;
+            padding: 0 0 1px;
             font-family: var(--font-main);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.9em;
-            color: var(--text-color);
+            font-size: 13px;
+            color: var(--hero-muted);
             background: none;
             border: none;
-            padding: 0 0 5px 0;
             border-bottom: 2px solid transparent;
-            transition: border-color 0.3s ease, color 0.3s ease;
+            transition: color 0.2s ease, border-color 0.2s ease;
             cursor: pointer;
         }
 
-        nav button.active, nav button:hover, nav button:focus-visible {
-            border-bottom: 2px solid var(--accent-color);
-            outline: none;
-        }
+        nav button span { font: 10px var(--font-mono); color: var(--hero-muted); }
+        nav button.active { color: var(--hero-text); border-bottom-color: var(--hero-accent); }
+        nav button:hover { color: var(--hero-text); }
+        .nav-note { color: var(--hero-muted); font-size: 9px; letter-spacing: 0.12em; }
 
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        .container { padding-top: 58px; }
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.25s ease-out; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Work Section Styles */
-        .publication {
-            margin-bottom: 32px;
+        /* Publication metadata stays in its own column, not inside the title. */
+        .work-heading, .publication, .editorial-section {
+            display: grid;
+            grid-template-columns: 210px minmax(0, 1fr);
+            column-gap: 48px;
         }
+
+        .work-heading { align-items: end; margin-bottom: 28px; }
+        .publication { padding: 30px 0 32px; border-top: 1px solid var(--line-color); }
+        .publication-meta { color: var(--accent-color); padding-top: 5px; line-height: 1.7; }
+        .publication-meta span { display: block; }
+        .publication-meta .publication-number { color: var(--faint-color); margin-top: 12px; font-size: 10px; }
 
         .publication h3 {
-            margin: 0 0 6px 0;
-            font-size: 1.15em;
-            font-weight: bold;
+            margin: 0 0 14px;
+            font-size: 22px;
+            font-weight: 500;
             line-height: 1.4;
-            font-family: 'Lining Digits', var(--font-main);
-            font-variant-numeric: lining-nums;
-        }
-
-        /* Times lining figures are optically lighter than Georgia Bold; thicken slightly. */
-        .publication h3 .lnum {
-            -webkit-text-stroke: 0.5px currentColor;
-            paint-order: stroke fill;
+            letter-spacing: -0.025em;
         }
 
         .publication .authors {
-            margin: 0 0 6px 0;
-            font-size: 0.98em;
-            color: var(--text-color);
+            margin: 0 0 18px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--muted-color);
         }
 
         .publication .authors .me {
-            text-decoration: underline;
-        }
-
-        .publication .venue {
-            margin: 0;
-            font-size: 0.95em;
             color: var(--text-color);
+            font-weight: 600;
+            text-decoration: underline;
+            text-decoration-color: var(--accent-color);
+            text-underline-offset: 3px;
         }
 
-        .publication .venue em {
-            font-style: italic;
-            margin-right: 8px;
-        }
+        .publication .venue { display: flex; flex-wrap: wrap; gap: 24px; margin: 0; }
 
         .publication .venue a {
+            padding: 3px 0;
             color: var(--link-color);
-            text-decoration: underline;
-            text-decoration-color: transparent;
-            text-underline-offset: 3px;
-            transition: text-decoration-color 0.2s ease, color 0.2s ease;
+            font-size: 12px;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
         }
 
-        .publication .venue a:hover {
-            text-decoration-color: var(--accent-color);
-        }
+        .publication .venue a::after { content: '\2197'; margin-left: 7px; }
+        .publication .venue a:hover { border-color: var(--accent-color); }
 
         /* moments Section Styles */
         .moments-group {
@@ -560,311 +609,225 @@
             .lb-next { right: 6px; }
         }
 
-        /* Experience Timeline */
-        .timeline {
-            list-style: none;
-            padding-left: 0;
-            position: relative;
-            margin-left: 12px;
-        }
+        /* Editorial content, with a consistent left-hand label column. */
+        .editorial-section { padding-bottom: 44px; }
+        .editorial-section + .editorial-section { border-top: 1px solid var(--line-color); padding-top: 36px; }
+        .section-index { display: block; margin-bottom: 10px; color: var(--faint-color); font-size: 10px; }
 
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 8px;
-            bottom: 8px;
-            width: 2px;
-            background: var(--accent-color);
-        }
-
-        .timeline li {
-            position: relative;
-            padding-left: 28px;
-            margin-bottom: 16px;
-        }
-
-        .timeline li:last-child {
-            margin-bottom: 0;
-        }
-
-        .timeline li::before {
-            content: '';
-            position: absolute;
-            left: -5px;
-            top: 7px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--bg-color);
-            border: 2px solid var(--accent-color);
-        }
-
-        .timeline .exp-time {
-            font-family: var(--font-mono);
-            font-size: 0.88em;
-            color: var(--faint-color);
-            line-height: 1.3;
-        }
-
-        .timeline .exp-org {
-            font-weight: bold;
-            font-size: 1.05em;
-            line-height: 1.3;
-        }
-
-        .timeline .exp-role {
-            font-style: italic;
-            font-size: 0.95em;
-            color: var(--muted-color);
-            line-height: 1.3;
-        }
-
-        .timeline .exp-desc {
-            font-size: 0.93em;
-            color: var(--muted-color);
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 0.8em;
-            color: var(--faint-color);
-            font-family: var(--font-mono);
-        }
-
-        .footer-top {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .footer-top a {
-            color: var(--link-color);
-            font-size: 1.1em;
-            text-decoration: underline;
-            text-decoration-color: transparent;
-            text-underline-offset: 3px;
-            transition: text-decoration-color 0.2s ease, color 0.2s ease;
-        }
-
-        .footer-top a:hover {
-            text-decoration-color: var(--accent-color);
-        }
-
-        /* Social links in header */
-        .social-links {
-            margin-top: 12px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .social-links a {
-            color: var(--muted-color);
-            display: inline-flex;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        .social-links svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        /* Shared section titles (News / Experience / etc.) */
         .section-title {
-            font-size: 1.2em;
-            border-bottom: 1px dashed var(--accent-color);
-            padding-bottom: 5px;
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 400;
+            letter-spacing: -0.035em;
+            line-height: 1.2;
+            margin: 0;
         }
 
-        .about-me {
-            margin-bottom: 30px;
-            font-size: 1.05em;
-            color: var(--text-color);
-        }
+        .about-copy { font-size: 15px; line-height: 1.85; color: var(--muted-color); }
+        .about-copy p { margin: 0 0 18px; }
+        .about-copy p:last-child { margin-bottom: 0; }
+        .about-copy .intro-lead { font-size: 19px; line-height: 1.65; color: var(--text-color); letter-spacing: -0.015em; }
 
         .about-me a,
         .about-me a:visited {
             color: var(--link-color);
             text-decoration: underline;
-            text-decoration-color: transparent;
-            text-underline-offset: 3px;
-            transition: text-decoration-color 0.2s ease, color 0.2s ease;
+            text-decoration-color: var(--line-color);
+            text-underline-offset: 4px;
+            transition: text-decoration-color 0.2s ease;
         }
 
-        .about-me a:hover {
-            text-decoration-color: var(--accent-color);
+        .about-me a:hover { text-decoration-color: var(--accent-color); }
+
+        .news-list { list-style: none; padding: 0; margin: 0; }
+        .news-list li { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 20px; margin-bottom: 16px; font-size: 14px; }
+        .news-list li:last-child { margin-bottom: 0; }
+        .news-list time { font: 11px/2.2 var(--font-mono); color: var(--faint-color); }
+
+        .timeline { list-style: none; padding: 0; margin: 0; }
+        .timeline li { display: grid; grid-template-columns: 160px minmax(0, 1fr); column-gap: 20px; margin-bottom: 26px; }
+        .timeline li:last-child { margin-bottom: 0; }
+        .timeline .exp-time { grid-row: span 2; font: 10px/2.4 var(--font-mono); color: var(--faint-color); }
+        .timeline .exp-org { font-weight: 500; font-size: 16px; line-height: 1.5; }
+        .timeline .exp-role { font-size: 13px; color: var(--muted-color); line-height: 1.7; margin-top: 4px; }
+
+        .about-section { padding-left: 258px; color: var(--faint-color); font-size: 12px; }
+        .work-note { margin: 0; color: var(--muted-color); font-size: 12px; line-height: 1.8; }
+        .work-note .star { color: var(--accent-color); }
+        .work-note em { font-style: normal; }
+
+        footer {
+            margin-top: 48px;
+            border-top: 1px solid var(--line-color);
+            padding: 24px 0 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            font: 10px/1.8 var(--font-mono);
+            color: var(--faint-color);
         }
 
-        .news-list {
-            list-style-type: none;
-            padding-left: 0;
-        }
+        .footer-top { display: flex; flex-wrap: wrap; gap: 10px 24px; }
+        .footer-top a { color: var(--link-color); text-decoration: none; }
+        .footer-top a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
-        .news-list li {
-            margin-bottom: 10px;
-        }
-
-        .experience-section,
-        .about-section {
-            margin-top: 30px;
-        }
-
-        .work-note {
-            margin: 0 0 28px 0;
-            color: var(--muted-color);
-            font-size: 0.95em;
-        }
-
-        .work-note .star {
-            color: #c0392b;
-        }
-
-        .work-note em {
-            color: var(--muted-color);
-        }
-
-        /* Reduced transparency: solid fills, no backdrop blur.
-           Browser support for this query is uneven; harmless where unsupported. */
         @media (prefers-reduced-transparency: reduce) {
-            .theme-toggle {
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
-                background: var(--card-bg);
-            }
-            .lb-btn,
-            .lb-close {
+            .lb-btn, .lb-close {
                 backdrop-filter: none;
                 -webkit-backdrop-filter: none;
                 background: rgba(24, 22, 20, 0.85);
             }
         }
 
-        /* Reduced motion (MOTION 4 -> must degrade): collapse animation,
-           smooth scrolling, and hover transforms to instant. */
         @media (prefers-reduced-motion: reduce) {
-            .section.active {
-                animation: none;
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
             }
-            .moments-months-track {
-                scroll-behavior: auto;
-            }
-            .moments-item img,
-            .month-chip,
-            .theme-toggle,
-            .social-links a {
-                transition: none;
-            }
-            .moments-item img:hover,
-            .theme-toggle:hover,
-            .social-links a:hover {
-                transform: none;
-            }
+            .moments-item img:hover { transform: none; }
         }
 
-        /* Responsive: tablets and phones */
-        @media (max-width: 600px) {
-            .container {
-                width: 92%;
-                margin: 24px auto;
-                padding: 12px;
-            }
+        @media (max-width: 960px) {
+            .site-bar, .hero, .nav-shell, .container { width: calc(100% - 64px); }
+            .hero { padding-block: 64px 72px; }
+            .work-heading, .publication, .editorial-section { grid-template-columns: 160px minmax(0, 1fr); column-gap: 30px; }
+            .timeline li { grid-template-columns: 1fr; }
+            .timeline .exp-time { grid-row: auto; margin-bottom: 4px; }
+            .about-section { padding-left: 190px; }
+        }
 
-            header {
-                flex-direction: column;
-                text-align: center;
-                align-items: center;
+        @media (max-width: 680px) {
+            .site-bar, .hero, .nav-shell, .container { width: calc(100% - 40px); }
+            .site-bar { height: 64px; }
+            .wordmark { font-size: 13px; }
+            .wordmark .profile-img { width: 30px; height: 30px; }
+            .hero { padding-block: 72px 42px; }
+            .hero-backdrop img { object-position: center top; }
+            .masthead::before {
+                background:
+                    linear-gradient(90deg, rgba(8, 20, 32, 0.48), rgba(8, 20, 32, 0.10)),
+                    linear-gradient(180deg, rgba(8, 20, 32, 0.52) 0%, rgba(8, 20, 32, 0.16) 25%, rgba(8, 20, 32, 0.64) 58%, rgba(8, 20, 32, 0.90) 100%);
             }
+            .header-info .eyebrow { font-size: 9px; margin-bottom: 20px; }
+            .header-info h1 { font-size: 70px; margin-bottom: 24px; }
+            .research-line { max-width: 380px; font-size: 18px; }
+            .affiliation { font-size: 12px; }
+            .contact { margin-top: 24px; gap: 12px 20px; font-size: 11px; }
+            .nav-note { display: none; }
+            nav { gap: 32px; }
+            nav button { min-height: 56px; }
+            .container { padding-top: 34px; }
+            .work-heading, .publication, .editorial-section { grid-template-columns: minmax(0, 1fr); }
+            .section-heading { margin-bottom: 22px; }
+            .section-index { font-size: 9px; margin-bottom: 6px; }
+            .section-title { font-size: 28px; }
+            .about-copy { font-size: 14px; }
+            .about-copy .intro-lead { font-size: 18px; }
+            .editorial-section { padding-bottom: 30px; }
+            .editorial-section + .editorial-section { padding-top: 28px; }
+            .news-list li { grid-template-columns: 74px minmax(0, 1fr); gap: 12px; font-size: 13px; }
+            .timeline li { margin-bottom: 22px; }
+            .about-section { padding-left: 0; }
+            .publication { padding-block: 24px; }
+            .publication-meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; padding: 0; font-size: 10px; }
+            .publication-meta .publication-number { margin: 0; }
+            .publication h3 { font-size: 20px; }
+            .publication .authors { font-size: 12px; }
+            footer { margin-top: 32px; align-items: flex-start; flex-direction: column; gap: 10px; }
+            .moments-grid { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); }
+        }
 
-            .profile-img {
-                margin: 0 0 16px 0;
-            }
-
-            .header-info h1 {
-                font-size: 1.9em;
-            }
-
-            .social-links {
-                justify-content: center;
-            }
-
-            nav {
-                gap: 18px;
-                flex-wrap: wrap;
-            }
-
-            .theme-toggle {
-                top: 12px;
-                right: 12px;
-                width: 38px;
-                height: 38px;
-            }
-
-            .moments-grid {
-                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-            }
+        @media (max-width: 370px) {
+            .header-info h1 { font-size: 60px; }
+            .wordmark span { display: none; }
         }
 
     </style>
 </head>
 <body>
 
-<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+<a class="skip-link" href="#content">Skip to content</a>
 
-<div class="container">
-    <header>
-        <img src="Portrait/photo.jpg" alt="Da Peng" class="profile-img" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22%23cabfa8%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2255%25%22%20font-size%3D%2248%22%20fill%3D%22%23fff%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%3EDP%3C%2Ftext%3E%3C%2Fsvg%3E'">
+<div class="masthead">
+    <picture class="hero-backdrop" aria-hidden="true">
+        <source media="(max-width: 680px)" srcset="assets/hero-mountains-mobile.webp" width="744" height="1024">
+        <img src="assets/hero-mountains.webp" width="1024" height="480" alt="" fetchpriority="high">
+    </picture>
+    <div class="site-bar">
+        <a class="wordmark" href="#home" aria-label="Da Peng, home">
+            <img class="profile-img" src="Portrait/photo.jpg" width="34" height="34" alt="" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2234%22%20height%3D%2234%22%3E%3Crect%20width%3D%2234%22%20height%3D%2234%22%20fill%3D%22%2327363f%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-size%3D%2214%22%20fill%3D%22%23f2f1eb%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3EDP%3C%2Ftext%3E%3C%2Fsvg%3E'">
+            Da Peng <span>/ Research</span>
+        </a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme" aria-pressed="false">
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.8 13A9 9 0 0 1 11 3.2 9 9 0 1 0 20.8 13Z"/></svg>
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+        </button>
+    </div>
+
+    <header class="hero">
         <div class="header-info">
-            <h1>Da Peng</h1>
-            <p style="margin-bottom: 2px;">PhD Student, Xi'an Jiaotong University</p>
-            <p style="margin-top: 0;">Researcher in LVLMs & Native Vision Agents</p>
+            <p class="eyebrow">Vision / Language / Agents</p>
+            <h1>Da Peng<span class="name-period" aria-hidden="true">.</span></h1>
+            <p class="research-line">Researcher in LVLMs &amp; Native Vision Agents</p>
+            <p class="affiliation">PhD Student, Xi'an Jiaotong University</p>
             <div class="contact">
-                ✉️ <a href="mailto:MetaPDa@gmail.com">MetaPDa@gmail.com</a> | 📍 Currently in Beijing
+                <a href="mailto:MetaPDa@gmail.com">MetaPDa@gmail.com <span aria-hidden="true">↗</span></a>
+                <span class="location"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="8" cy="6" r="1.7"/><path d="M12.5 6C12.5 10 8 14 8 14S3.5 10 3.5 6a4.5 4.5 0 0 1 9 0Z"/></svg>Currently in Beijing</span>
             </div>
         </div>
+
     </header>
 
-    <nav>
-        <button id="nav-home" type="button" class="active" onclick="switchTab('home')">ABOUT ME</button>
-        <button id="nav-work" type="button" onclick="switchTab('work')">WORK</button>
-        <!-- TEMP-HIDDEN: Moments nav (restore by uncommenting)
-        <button id="nav-moments" type="button" onclick="switchTab('moments')">MOMENTS</button>
-        -->
-    </nav>
+    <div class="nav-shell">
+        <nav aria-label="Main navigation">
+            <button id="nav-home" type="button" class="active" aria-pressed="true" aria-controls="section-home" onclick="switchTab('home')"><span aria-hidden="true">01</span> About me</button>
+            <button id="nav-work" type="button" aria-pressed="false" aria-controls="section-work" onclick="switchTab('work')"><span aria-hidden="true">02</span> Work</button>
+            <!-- TEMP-HIDDEN: Moments nav (restore by uncommenting)
+            <button id="nav-moments" type="button" onclick="switchTab('moments')">MOMENTS</button>
+            -->
+        </nav>
+        <span class="nav-note">A personal research space</span>
+    </div>
+</div>
 
-    <div id="section-home" class="section active">
-        <div class="about-me">
-            <p>Hi, I'm Da Peng, a Ph.D. student at Xi'an Jiaotong University, advised by <a href="https://gr.xjtu.edu.cn/en/web/wei.ke/homepage" target="_blank" rel="noopener">Prof. Wei Ke</a>. My research focuses on large vision language models and native vision agents. More broadly, I am interested in artificial intelligence and machine learning, particularly in enabling models to better connect and reason across vision, language, and other modalities. Currently, my research is focused on physical perception in real-world environments, where I explore simple yet effective approaches for improving model understanding and reasoning.</p>
+<main id="content" class="container" tabindex="-1">
+    <section id="section-home" class="section active" aria-labelledby="nav-home">
+        <div class="about-me editorial-section">
+            <div class="section-heading">
+                <span class="section-index">01 / Introduction</span>
+                <h2 class="section-title">About me</h2>
+            </div>
+            <div class="about-copy">
+                <p class="intro-lead">Hi, I'm Da Peng, a Ph.D. student at Xi'an Jiaotong University, advised by <a href="https://gr.xjtu.edu.cn/en/web/wei.ke/homepage" target="_blank" rel="noopener">Prof. Wei Ke</a>. My research focuses on large vision language models and native vision agents.</p>
 
-            <p>I have been fortunate to collaborate with many talented researchers, including <a href="https://scholar.google.com/citations?user=h1I6LJcAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Zonghao Guo</a>, Yansong Li, Shichu Sun, <a href="https://comedy0913.github.io/" target="_blank" rel="noopener">Jiale Wang</a>, Xuesong Yang, and <a href="https://scholar.google.com/citations?user=Jck7vrwAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Yichen Zhang</a>. This list will continue to grow over time.</p>
+                <p>More broadly, I am interested in artificial intelligence and machine learning, particularly in enabling models to better connect and reason across vision, language, and other modalities. Currently, my research is focused on physical perception in real-world environments, where I explore simple yet effective approaches for improving model understanding and reasoning.</p>
 
-            <p>Feel free to reach out if you are interested in discussing research ideas or potential collaborations.</p>
+                <p>I have been fortunate to collaborate with many talented researchers, including <a href="https://scholar.google.com/citations?user=h1I6LJcAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Zonghao Guo</a>, Yansong Li, Shichu Sun, <a href="https://comedy0913.github.io/" target="_blank" rel="noopener">Jiale Wang</a>, Xuesong Yang, and <a href="https://scholar.google.com/citations?user=Jck7vrwAAAAJ&hl=zh-CN" target="_blank" rel="noopener">Yichen Zhang</a>. This list will continue to grow over time.</p>
+
+                <p>Feel free to reach out if you are interested in discussing research ideas or potential collaborations.</p>
+            </div>
         </div>
 
-        <div class="news-section">
-            <h2 class="section-title">News</h2>
+        <div class="news-section editorial-section">
+            <div class="section-heading">
+                <span class="section-index">02 / Updates</span>
+                <h2 class="section-title">News</h2>
+            </div>
             <ul class="news-list">
-                <li>🔥 <strong>[2026.06]</strong> ECCV+1 ! </li>
-                <li>🚀 <strong>[2026.05]</strong> Joined Tongyi as Research Intern .</li>
-                <li>🍺 <strong>[2026.03]</strong> Cheers for Open Source ! </li>
-                <li>🔥 <strong>[2026.03]</strong> CVPR+1 ! See you in Denver ! </li>
+                <li><time datetime="2026-06">2026.06</time><span>ECCV +1!</span></li>
+                <li><time datetime="2026-05">2026.05</time><span>Joined Tongyi as Research Intern.</span></li>
+                <li><time datetime="2026-03">2026.03</time><span>Cheers for Open Source!</span></li>
+                <li><time datetime="2026-03">2026.03</time><span>CVPR +1! See you in Denver!</span></li>
             </ul>
         </div>
 
-        <div class="experience-section">
-            <h2 class="section-title">Experience</h2>
+        <div class="experience-section editorial-section">
+            <div class="section-heading">
+                <span class="section-index">03 / Background</span>
+                <h2 class="section-title">Experience</h2>
+            </div>
             <ul class="timeline">
                 <li>
                     <div class="exp-time">2026.05 - Present</div>
@@ -887,61 +850,73 @@
         <div class="about-section">
             <p><em>More content will be added here soon...</em></p>
         </div>
-    </div>
+    </section>
 
-    <div id="section-work" class="section">
-        <p class="work-note">
-            <span class="star">*</span> Equal Contribution &nbsp;|&nbsp;
-            <em>All works will be organized and added soon.</em>
-        </p>
-        <div class="publication">
-            <h3>🔥 Qwen<span class="lnum">3.8</span>-Max: A New Bar for Coding and Cowork</h3>
-            <p class="authors">
-                Qwen Team
-            </p>
-            <p class="venue">
-                <em>Technical Report</em>
-                [<a href="https://qwen.ai/blog?id=qwen3.8" target="_blank">Blog</a>]
+    <section id="section-work" class="section" aria-labelledby="nav-work">
+        <div class="work-heading">
+            <div class="section-heading">
+                <span class="section-index">Research / Publications</span>
+                <h2 class="section-title">Selected work</h2>
+            </div>
+            <p class="work-note">
+                <span class="star">*</span> Equal Contribution<br>
+                <em>All works will be organized and added soon.</em>
             </p>
         </div>
+        <article class="publication">
+            <div class="publication-meta"><span>Blog</span><span class="publication-number" aria-hidden="true">01</span></div>
+            <div class="publication-body">
+                <h3>Qwen3.8-Max: A New Bar for Coding and Cowork</h3>
+                <p class="authors">Qwen Team</p>
+                <p class="venue">
+                    <a href="https://qwen.ai/blog?id=qwen3.8" target="_blank" rel="noopener">Blog</a>
+                </p>
+            </div>
+        </article>
 
-        <div class="publication">
-            <h3>🔥 Cheers: Decoupling Patch Details from Semantic Representations Enables Unified Multimodal Comprehension and Generation</h3>
-            <p class="authors">
-                Yichen Zhang*, <span class="me">Da Peng</span>*, Zonghao Guo, Zijian Zhang, Xuesong Yang, Tong Sun, Shichu Sun, Yidan Zhang, Yanghao Li, Haiyan Zhao, Wang Xu, Qi Shi, Yangang Sun, Chi Chen, Shuo Wang, Yukun Yan, Xu Han, Qiang Ma, Wei Ke, Liang Wang, Zhiyuan Liu, Maosong Sun.
-            </p>
-            <p class="venue">
-                <em>ECCV 2026</em>
-                [<a href="https://arxiv.org/pdf/2603.12793" target="_blank">Paper</a>]
-                [<a href="https://huggingface.co/ai9stars/Cheers" target="_blank">HuggingFace</a>]
-                [<a href="https://github.com/AI9Stars/Cheers" target="_blank">Code</a>]
-            </p>
-        </div>
+        <article class="publication">
+            <div class="publication-meta"><span>ECCV 2026</span><span class="publication-number" aria-hidden="true">02</span></div>
+            <div class="publication-body">
+                <h3>Cheers: Decoupling Patch Details from Semantic Representations Enables Unified Multimodal Comprehension and Generation</h3>
+                <p class="authors">
+                    Yichen Zhang*, <span class="me">Da Peng</span>*, Zonghao Guo, Zijian Zhang, Xuesong Yang, Tong Sun, Shichu Sun, Yidan Zhang, Yanghao Li, Haiyan Zhao, Wang Xu, Qi Shi, Yangang Sun, Chi Chen, Shuo Wang, Yukun Yan, Xu Han, Qiang Ma, Wei Ke, Liang Wang, Zhiyuan Liu, Maosong Sun.
+                </p>
+                <p class="venue">
+                    <a href="https://arxiv.org/pdf/2603.12793" target="_blank" rel="noopener">Paper</a>
+                    <a href="https://huggingface.co/ai9stars/Cheers" target="_blank" rel="noopener">HuggingFace</a>
+                    <a href="https://github.com/AI9Stars/Cheers" target="_blank" rel="noopener">Code</a>
+                </p>
+            </div>
+        </article>
 
-        <div class="publication">
-            <h3>🔥 FlexiVideo: Variation-Aware Temporal Dynamics Modeling for Efficient Video Understanding</h3>
-            <p class="authors">
-                <span class="me">Da Peng</span>*, Xuesong Yang*, Zonghao Guo, Yichen Zhang, Chi Chen, Yidan Zhang, Yuan Yao, Fang Wan, Wei Ke, Maosong Sun.
-            </p>
-            <p class="venue">
-                <em>CVPR 2026</em>
-                [<a href="https://openaccess.thecvf.com/content/CVPR2026/papers/Peng_FlexiVideo_Variation-Aware_Temporal_Dynamics_Modeling_for_Efficient_Video_Understanding_CVPR_2026_paper.pdf" target="_blank">Paper</a>]
-                [<a href="https://github.com/AI9Stars/FlexiVideo" target="_blank">Code</a>]
-            </p>
-        </div>
+        <article class="publication">
+            <div class="publication-meta"><span>CVPR 2026</span><span class="publication-number" aria-hidden="true">03</span></div>
+            <div class="publication-body">
+                <h3>FlexiVideo: Variation-Aware Temporal Dynamics Modeling for Efficient Video Understanding</h3>
+                <p class="authors">
+                    <span class="me">Da Peng</span>*, Xuesong Yang*, Zonghao Guo, Yichen Zhang, Chi Chen, Yidan Zhang, Yuan Yao, Fang Wan, Wei Ke, Maosong Sun.
+                </p>
+                <p class="venue">
+                    <a href="https://openaccess.thecvf.com/content/CVPR2026/papers/Peng_FlexiVideo_Variation-Aware_Temporal_Dynamics_Modeling_for_Efficient_Video_Understanding_CVPR_2026_paper.pdf" target="_blank" rel="noopener">Paper</a>
+                    <a href="https://github.com/AI9Stars/FlexiVideo" target="_blank" rel="noopener">Code</a>
+                </p>
+            </div>
+        </article>
 
-        <div class="publication">
-            <h3>🔥 Will Pre-Training Ever End? A First Step Toward Next-Generation Foundation MLLMs via Self-Improving Systematic Cognition</h3>
-            <p class="authors">
-                Xiaoying Zhang, <span class="me">Da Peng</span>, Yipeng Zhang, Zonghao Guo, Chengyue Wu, Jen-Tse Huang, Chi Chen, Wei Ke, Helen Meng, Maosong Sun.
-            </p>
-            <p class="venue">
-                <em>Preprint</em>
-                [<a href="https://arxiv.org/pdf/2503.12303" target="_blank">Paper</a>]
-                [<a href="https://github.com/thunlp/SICOG" target="_blank">Code</a>]
-            </p>
-        </div>
-    </div>
+        <article class="publication">
+            <div class="publication-meta"><span>Preprint</span><span class="publication-number" aria-hidden="true">04</span></div>
+            <div class="publication-body">
+                <h3>Will Pre-Training Ever End? A First Step Toward Next-Generation Foundation MLLMs via Self-Improving Systematic Cognition</h3>
+                <p class="authors">
+                    Xiaoying Zhang, <span class="me">Da Peng</span>, Yipeng Zhang, Zonghao Guo, Chengyue Wu, Jen-Tse Huang, Chi Chen, Wei Ke, Helen Meng, Maosong Sun.
+                </p>
+                <p class="venue">
+                    <a href="https://arxiv.org/pdf/2503.12303" target="_blank" rel="noopener">Paper</a>
+                    <a href="https://github.com/thunlp/SICOG" target="_blank" rel="noopener">Code</a>
+                </p>
+            </div>
+        </article>
+    </section>
 
     <!-- TEMP-HIDDEN: Moments section (restore by uncommenting)
     <div id="section-moments" class="section">
@@ -973,11 +948,11 @@
     <footer>
         <div class="footer-top">
             <span>Last updated: October 6, 2026</span>
-            <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">🔝 Back to Top</a>
+            <a href="#" onclick="window.scrollTo({top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); return false;">Back to top <span aria-hidden="true">↑</span></a>
         </div>
-        &copy; <span id="year"></span> MetaPDa. All rights reserved.
+        <span>&copy; <span id="year"></span> MetaPDa. All rights reserved.</span>
     </footer>
-</div>
+</main>
 
 
 <script src="moments_index.js">
@@ -1078,7 +1053,9 @@
         if (TABS.indexOf(tabId) === -1) tabId = 'home';
 
         document.querySelectorAll('nav button').forEach(function (btn) {
-            btn.classList.toggle('active', btn.id === 'nav-' + tabId);
+            var active = btn.id === 'nav-' + tabId;
+            btn.classList.toggle('active', active);
+            btn.setAttribute('aria-pressed', String(active));
         });
         document.querySelectorAll('.section').forEach(function (sec) {
             sec.classList.toggle('active', sec.id === 'section-' + tabId);
@@ -1301,16 +1278,18 @@
         var stored = null;
         try { stored = localStorage.getItem('theme'); } catch (e) {}
         var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = stored || (prefersDark ? 'dark' : 'light');
+        var theme = (stored === 'dark' || stored === 'light') ? stored : (prefersDark ? 'dark' : 'light');
 
         function applyTheme(t) {
             if (t === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                toggle.textContent = '☀️';
             } else {
                 document.documentElement.removeAttribute('data-theme');
-                toggle.textContent = '🌙';
             }
+            var label = t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+            toggle.setAttribute('aria-label', label);
+            toggle.setAttribute('title', label);
+            toggle.setAttribute('aria-pressed', String(t === 'dark'));
         }
 
         applyTheme(theme);
